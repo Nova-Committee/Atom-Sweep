@@ -1,0 +1,12 @@
+{
+  "message.atomclean.cleanupItemCountdown": "Item entities will be removed in %d s!",
+  "message.atomclean.cleanupMobCountdown": "Mob entities will be removed in %d s!",
+  "message.atomclean.cleanupMonsterCountdown": "Monster entities will be removed in %d s!",
+  "message.atomclean.cleanupAnimalCountdown": "Animal entities will be removed in %d s!",
+
+  "message.atomclean.itemCleanupComplete": "%d item entity(entities) removed",
+  "message.atomclean.mobCleanupComplete": "%d mob entity(entities) removed",
+  "message.atomclean.monsterCleanupComplete": "%d monster entity(entities) removed",
+  "message.atomclean.animalCleanupComplete": "%d animal entity(entities) removed"
+
+}
