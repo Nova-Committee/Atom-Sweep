@@ -92,7 +92,7 @@ publishing {
             artifactId = "${project.archives_base_name}"
             groupId = "${project.maven_group}"
             pom {
-                name = 'Atom Clean'
+                name = 'Atom Sweep'
                 description = ''
                 licenses {
                     license {

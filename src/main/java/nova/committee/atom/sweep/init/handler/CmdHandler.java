@@ -1,9 +1,9 @@
-package nova.committee.atom.clean.init.handler;
+package nova.committee.atom.sweep.init.handler;
 
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import nova.committee.atom.clean.common.cmd.CleanCommand;
+import nova.committee.atom.sweep.common.cmd.SweepCommand;
 
 /**
  * Description:
@@ -16,6 +16,6 @@ public class CmdHandler {
 
     @SubscribeEvent
     public static void registryCmd(RegisterCommandsEvent event) {
-        CleanCommand.register(event.getDispatcher());
+        SweepCommand.register(event.getDispatcher());
     }
 }

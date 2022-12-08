@@ -1,12 +1,10 @@
-package nova.committee.atom.clean.init.config;
+package nova.committee.atom.sweep.init.config;
 
 import com.google.common.collect.Sets;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import net.minecraftforge.common.ForgeConfigSpec;
-import nova.committee.atom.clean.init.handler.CleanerHandler;
 
-import java.util.*;
+import java.util.Set;
 
 /**
  * Description:
@@ -14,13 +12,16 @@ import java.util.*;
  * Date: 2022/4/8 21:38
  * Version: 1.0
  */
-public class CleanerConfig{
+public class SweepConfig {
     @SerializedName("items_clean")
     private ItemEntitiesClean itemsClean = new ItemEntitiesClean();
     @SerializedName("mobs_clean")
     private MobsClean mobsClean = new MobsClean();
     @SerializedName("others_clean")
     private OtherEntitiesClean othersClean = new OtherEntitiesClean();
+    @SerializedName("common")
+    private Common common = new Common();
+
     public String getConfigName() {
         return "atom_sweep";
     }
@@ -37,17 +38,46 @@ public class CleanerConfig{
         return othersClean;
     }
 
-    public static class ItemEntitiesClean{
+    public Common getCommon() {
+        return common;
+    }
+
+    public static class Common {
+        @Expose
+        private int sweepPeriod = 4;
+        @Expose
+        private int sweepNotify = 20;
+        @Expose
+        private int sweepDiscount = 5;
+        @Expose
+        private String sweepNotice = "<演变> 注意：还有 %d 秒就要去你家吃饭了~";
+        @Expose
+        private String sweepNoticeComplete = "<演变> 这次一共吃掉了 %d 个掉落物， %d 个生物 %d 个经验球和 %d 个其他实体~";
+
+        public String getSweepNoticeComplete() {
+            return sweepNoticeComplete;
+        }
+
+        public String getSweepNotice() {
+            return sweepNotice;
+        }
+
+        public int getSweepNotify() {
+            return sweepNotify;
+        }
+
+        public int getSweepPeriod() {
+            return sweepPeriod;
+        }
+
+        public int getSweepDiscount() {
+            return sweepDiscount;
+        }
+    }
+
+    public static class ItemEntitiesClean {
         @Expose
         private boolean isItemEntityCleanupEnable = true;
-        @Expose
-        private int cleanupItemEntitiesIntervalSeconds = 300;
-        @Expose
-        private String cleanedupItemEntitiesMessage = "null";
-        @Expose
-        private int cleanupItemEntitiesCountdownSeconds = 30;
-        @Expose
-        private String cleanupItemEntitiesCountdownMessage = "null";
         @Expose
         private boolean itemEntitiesMatchMode = true;
         @Expose
@@ -63,37 +93,6 @@ public class CleanerConfig{
             isItemEntityCleanupEnable = itemEntityCleanupEnable;
         }
 
-        public int getCleanupItemEntitiesIntervalSeconds() {
-            return cleanupItemEntitiesIntervalSeconds;
-        }
-
-        public void setCleanupItemEntitiesIntervalSeconds(int cleanupItemEntitiesIntervalSeconds) {
-            this.cleanupItemEntitiesIntervalSeconds = cleanupItemEntitiesIntervalSeconds;
-        }
-
-        public String getCleanedupItemEntitiesMessage() {
-            return cleanedupItemEntitiesMessage;
-        }
-
-        public void setCleanedupItemEntitiesMessage(String cleanedupItemEntitiesMessage) {
-            this.cleanedupItemEntitiesMessage = cleanedupItemEntitiesMessage;
-        }
-
-        public int getCleanupItemEntitiesCountdownSeconds() {
-            return cleanupItemEntitiesCountdownSeconds;
-        }
-
-        public void setCleanupItemEntitiesCountdownSeconds(int cleanupItemEntitiesCountdownSeconds) {
-            this.cleanupItemEntitiesCountdownSeconds = cleanupItemEntitiesCountdownSeconds;
-        }
-
-        public String getCleanupItemEntitiesCountdownMessage() {
-            return cleanupItemEntitiesCountdownMessage;
-        }
-
-        public void setCleanupItemEntitiesCountdownMessage(String cleanupItemEntitiesCountdownMessage) {
-            this.cleanupItemEntitiesCountdownMessage = cleanupItemEntitiesCountdownMessage;
-        }
 
         public boolean isItemEntitiesMatchMode() {
             return itemEntitiesMatchMode;
@@ -129,33 +128,19 @@ public class CleanerConfig{
     }
     public static class MobsClean{
         @Expose
-        private boolean isMobEntityCleanupEnable = false;
-        @Expose
         private boolean isAnimalEntitiesCleanupEnable = true;
         @Expose
         private boolean isMonsterEntitiesCleanupEnable = true;
         @Expose
-        private int cleanupMobEntitiesIntervalSeconds = 360;
+        private boolean isMobEntityCleanupEnable = false;
         @Expose
-        private int cleanupMobEntitiesCountdownSeconds = 30;
-        @Expose
-        private String cleanedupMobEntitiesMessage = "null";
-        @Expose
-        private String cleanupMobEntitiesCountdownMessage = "null";
-
         private boolean mobEntitiesMatchMode = true;
+        @Expose
         private Set<String> mobEntitiesWhitelist = Sets.newHashSet("minecraft:cat", "minecraft:mule", "minecraft:wolf", "minecraft:horse",
                 "minecraft:donkey", "minecraft:wither", "minecraft:guardian", "minecraft:villager", "minecraft:iron_golem", "minecraft:snow_golem",
                 "minecraft:vindicator", "minecraft:ender_dragon", "minecraft:elder_guardian");
+        @Expose
         private Set<String> mobEntitiesBlacklist = Sets.newHashSet();
-
-        public boolean isMobEntityCleanupEnable() {
-            return isMobEntityCleanupEnable;
-        }
-
-        public void setMobEntityCleanupEnable(boolean mobEntityCleanupEnable) {
-            isMobEntityCleanupEnable = mobEntityCleanupEnable;
-        }
 
         public boolean isAnimalEntitiesCleanupEnable() {
             return isAnimalEntitiesCleanupEnable;
@@ -173,36 +158,12 @@ public class CleanerConfig{
             isMonsterEntitiesCleanupEnable = monsterEntitiesCleanupEnable;
         }
 
-        public int getCleanupMobEntitiesIntervalSeconds() {
-            return cleanupMobEntitiesIntervalSeconds;
+        public boolean isMobEntityCleanupEnable() {
+            return isMobEntityCleanupEnable;
         }
 
-        public void setCleanupMobEntitiesIntervalSeconds(int cleanupMobEntitiesIntervalSeconds) {
-            this.cleanupMobEntitiesIntervalSeconds = cleanupMobEntitiesIntervalSeconds;
-        }
-
-        public int getCleanupMobEntitiesCountdownSeconds() {
-            return cleanupMobEntitiesCountdownSeconds;
-        }
-
-        public void setCleanupMobEntitiesCountdownSeconds(int cleanupMobEntitiesCountdownSeconds) {
-            this.cleanupMobEntitiesCountdownSeconds = cleanupMobEntitiesCountdownSeconds;
-        }
-
-        public String getCleanedupMobEntitiesMessage() {
-            return cleanedupMobEntitiesMessage;
-        }
-
-        public void setCleanedupMobEntitiesMessage(String cleanedupMobEntitiesMessage) {
-            this.cleanedupMobEntitiesMessage = cleanedupMobEntitiesMessage;
-        }
-
-        public String getCleanupMobEntitiesCountdownMessage() {
-            return cleanupMobEntitiesCountdownMessage;
-        }
-
-        public void setCleanupMobEntitiesCountdownMessage(String cleanupMobEntitiesCountdownMessage) {
-            this.cleanupMobEntitiesCountdownMessage = cleanupMobEntitiesCountdownMessage;
+        public void setMobEntityCleanupEnable(boolean mobEntityCleanupEnable) {
+            isMobEntityCleanupEnable = mobEntityCleanupEnable;
         }
 
         public boolean isMobEntitiesMatchMode() {
@@ -239,8 +200,6 @@ public class CleanerConfig{
     }
     public static class OtherEntitiesClean{
         @Expose
-        private int cleanupOtherEntitiesIntervalSeconds = 300;
-        @Expose
         private boolean isExperienceOrbEntityCleanupEnable = true;
         @Expose
         private boolean isFallingBlocksEntityCleanupEnable = true;
@@ -262,14 +221,6 @@ public class CleanerConfig{
         private boolean isBoatEntityCleanupEnable = false;
         @Expose
         private boolean isTNTEntityCleanupEnable = true;
-
-        public int getCleanupOtherEntitiesIntervalSeconds() {
-            return cleanupOtherEntitiesIntervalSeconds;
-        }
-
-        public void setCleanupOtherEntitiesIntervalSeconds(int cleanupOtherEntitiesIntervalSeconds) {
-            this.cleanupOtherEntitiesIntervalSeconds = cleanupOtherEntitiesIntervalSeconds;
-        }
 
         public boolean isExperienceOrbEntityCleanupEnable() {
             return isExperienceOrbEntityCleanupEnable;

@@ -1,10 +1,9 @@
-package nova.committee.atom.clean.core.model;
+package nova.committee.atom.sweep.core.model;
 
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.util.ResourceLocation;
-import nova.committee.atom.clean.Static;
-import nova.committee.atom.clean.init.handler.CleanerHandler;
+import nova.committee.atom.sweep.Static;
 
 
 /**
