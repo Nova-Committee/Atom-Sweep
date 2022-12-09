@@ -1,8 +1,9 @@
 package nova.committee.atom.sweep.core.model;
 
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.util.ResourceLocation;
+
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
 import nova.committee.atom.sweep.Static;
 
 
@@ -13,10 +14,10 @@ import nova.committee.atom.sweep.Static;
  * Version: 1.0
  */
 public class AESMobEntity {
-    private final MobEntity entity;
+    private final Mob entity;
     private final ResourceLocation registryName;
 
-    public AESMobEntity(MobEntity entity) {
+    public AESMobEntity(Mob entity) {
         this.entity = entity;
         this.registryName = EntityType.getKey(entity.getType());
     }
@@ -45,7 +46,7 @@ public class AESMobEntity {
         }
     }
 
-    public MobEntity getEntity() {
+    public Mob getEntity() {
         return entity;
     }
 

@@ -1,6 +1,6 @@
 package nova.committee.atom.sweep.init.event;
 
-import net.minecraft.entity.Entity;
+import net.minecraft.world.entity.Entity;
 import net.minecraftforge.eventbus.api.Event;
 
 /**

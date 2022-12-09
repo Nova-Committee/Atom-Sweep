@@ -1,9 +1,10 @@
 package nova.committee.atom.sweep.core.model;
 
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraftforge.registries.ForgeRegistries;
 import nova.committee.atom.sweep.Static;
 
 /**
@@ -18,7 +19,7 @@ public class AESItemEntity {
 
     public AESItemEntity(ItemEntity entity) {
         this.entity = entity;
-        this.registryName = this.entity.getItem().getItem().getRegistryName();
+        this.registryName = ForgeRegistries.ITEMS.getKey(this.entity.getItem().getItem());
     }
 
     /**

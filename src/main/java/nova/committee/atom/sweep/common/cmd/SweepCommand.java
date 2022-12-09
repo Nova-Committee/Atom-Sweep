@@ -3,13 +3,10 @@ package nova.committee.atom.sweep.common.cmd;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.Commands;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Util;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.network.chat.Component;
+import net.minecraftforge.registries.ForgeRegistries;
 import nova.committee.atom.sweep.Static;
 import nova.committee.atom.sweep.core.Sweeper;
 import nova.committee.atom.sweep.init.handler.ConfigHandler;
@@ -22,7 +19,7 @@ import nova.committee.atom.sweep.init.handler.ConfigHandler;
  * Version: 1.0
  */
 public class SweepCommand {
-    public static void register(CommandDispatcher<CommandSource> dispatcher) {
+    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(
                 Commands.literal(Static.MOD_ID)
 
@@ -63,59 +60,60 @@ public class SweepCommand {
 
         );
     }
-    private static int whiteAdd(CommandContext<CommandSource> context) throws CommandSyntaxException {
-        ServerPlayerEntity player = context.getSource().getPlayerOrException();
-        ItemStack itemStack = player.getMainHandItem();
-        if (itemStack.getItem().getRegistryName() != null){
-            Static.config.getItemsClean().addItemEntitiesWhitelist(itemStack.getItem().getRegistryName().toString());
+
+    private static int whiteAdd(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        var player = context.getSource().getPlayerOrException();
+        var itemStack = player.getMainHandItem();
+        if (ForgeRegistries.ITEMS.getKey(itemStack.getItem()) != null) {
+            Static.config.getItemsClean().addItemEntitiesWhitelist(ForgeRegistries.ITEMS.getKey(itemStack.getItem()).toString());
             ConfigHandler.onChange();
-            player.sendMessage(new StringTextComponent("已经添加到白名单"), Util.NIL_UUID);
-        }
-        else {
-            player.sendMessage(new StringTextComponent("添加到白名单失败"), Util.NIL_UUID);
+            player.sendSystemMessage(Component.literal("已经添加到白名单"));
+        } else {
+            player.sendSystemMessage(Component.literal("添加到白名单失败"));
 
         }
         return 1;
     }
-    private static int whiteDel(CommandContext<CommandSource> context) throws CommandSyntaxException {
-        ServerPlayerEntity player = context.getSource().getPlayerOrException();
-        ItemStack itemStack = player.getMainHandItem();
-        if (itemStack.getItem().getRegistryName() != null){
-            Static.config.getItemsClean().delItemEntitiesWhitelist(itemStack.getItem().getRegistryName().toString());
+
+    private static int whiteDel(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        var player = context.getSource().getPlayerOrException();
+        var itemStack = player.getMainHandItem();
+        if (ForgeRegistries.ITEMS.getKey(itemStack.getItem()) != null) {
+            Static.config.getItemsClean().delItemEntitiesWhitelist(ForgeRegistries.ITEMS.getKey(itemStack.getItem()).toString());
             ConfigHandler.onChange();
-            player.sendMessage(new StringTextComponent("已经从白名单移除"), Util.NIL_UUID);
-        }
-        else {
-            player.sendMessage(new StringTextComponent("从白名单移除失败"), Util.NIL_UUID);
+            player.sendSystemMessage(Component.literal("已经从白名单移除"));
+        } else {
+            player.sendSystemMessage(Component.literal("从白名单移除失败"));
         }
         return 1;
     }
-    private static int itemsExe(CommandContext<CommandSource> context) throws CommandSyntaxException {
-        ServerWorld world = context.getSource().getLevel();
+
+    private static int itemsExe(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        var world = context.getSource().getLevel();
         Sweeper.INSTANCE.cleanupItemEntity(world);
         return 1;
     }
 
-    private static int monstersExe(CommandContext<CommandSource> context) throws CommandSyntaxException {
-        ServerWorld world = context.getSource().getLevel();
+    private static int monstersExe(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        var world = context.getSource().getLevel();
         Sweeper.INSTANCE.cleanupMonsterEntity(world);
         return 1;
     }
 
-    private static int animalsExe(CommandContext<CommandSource> context) throws CommandSyntaxException {
-        ServerWorld world = context.getSource().getLevel();
+    private static int animalsExe(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        var world = context.getSource().getLevel();
         Sweeper.INSTANCE.cleanupAnimalEntity(world);
         return 1;
     }
 
-    private static int xpsExe(CommandContext<CommandSource> context) throws CommandSyntaxException {
-        ServerWorld world = context.getSource().getLevel();
+    private static int xpsExe(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        var world = context.getSource().getLevel();
         Sweeper.INSTANCE.cleanupXpEntity(world);
         return 1;
     }
 
-    private static int othersExe(CommandContext<CommandSource> context) throws CommandSyntaxException {
-        ServerWorld world = context.getSource().getLevel();
+    private static int othersExe(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        var world = context.getSource().getLevel();
         Sweeper.INSTANCE.cleanOtherEntities(world);
         return 1;
     }

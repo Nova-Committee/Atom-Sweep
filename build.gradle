@@ -1,40 +1,61 @@
 plugins {
-    id 'net.minecraftforge.gradle' version '5.1.+'
+    id 'java'
+    id 'idea'
     id 'maven-publish'
+
+    id 'net.minecraftforge.gradle' version '5.1.+'
+    id 'org.spongepowered.mixin' version '0.7.+'
+    id 'org.parchmentmc.librarian.forgegradle' version '1.+'
+    id 'org.jetbrains.gradle.plugin.idea-ext' version '1.1'
 }
 
-
-version = project.mod_version
+version = project.minecraft_version + "-" + project.mod_version
 group = project.maven_group
 
-java {
-    archivesBaseName = project.archives_base_name
-    toolchain.languageVersion = JavaLanguageVersion.of(8)
+
+configurations {
+    library
+    implementation.extendsFrom library
 }
 
+println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 minecraft {
-    mappings channel: 'official', version: '1.16.5'
+    mappings channel: 'parchment', version: "${parchment_mappings}-${minecraft_version}"
 
-    // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
-
+    if (file("./src/main/resources/META-INF/accesstransformer.cfg").exists()) {
+        accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+    }
     runs {
         client {
             workingDirectory project.file('run')
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
+            property 'forge.enabledGameTestNamespaces', "${mod_id}"
             mods {
-                clean {
+                "${mod_id}" {
                     source sourceSets.main
                 }
             }
         }
-
         server {
             workingDirectory project.file('run')
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
+            property 'forge.enabledGameTestNamespaces', "${mod_id}"
             mods {
-                clean {
+                "${mod_id}" {
+                    source sourceSets.main
+                }
+            }
+        }
+        gameTestServer {
+            workingDirectory project.file('run')
+
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+            property 'forge.enabledGameTestNamespaces', "${mod_id}"
+            mods {
+                "${mod_id}" {
                     source sourceSets.main
                 }
             }
@@ -44,9 +65,9 @@ minecraft {
             workingDirectory project.file('run')
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
-            args '--mod', 'clean', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+            args '--mod', "${mod_id}", '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
             mods {
-                clean {
+                "${mod_id}" {
                     source sourceSets.main
                 }
             }
@@ -54,46 +75,135 @@ minecraft {
     }
 }
 
-sourceSets.main.resources { srcDir 'src/generated/resources' }
+if (file("./src/main/resources/${mod_id}.mixins.json").exists()) {
+    mixin {
+        add sourceSets.main, "${mod_id}.refmap.json"
+        config "${mod_id}.mixins.json"
+    }
+}
 
+minecraft.runs.all {
+    lazyToken('minecraft_classpath') {
+        configurations.library.copyRecursive().resolve().collect { it.absolutePath }.join(File.pathSeparator)
+    }
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main/java']
+        }
+
+        resources {
+            srcDirs = ['src/main/resources', 'src/generated/resources']
+        }
+    }
+
+    test {
+        java {
+            srcDirs = ['src/test/java']
+        }
+
+        resources {
+            srcDirs = ['src/test/resources']
+        }
+    }
+}
 repositories {
-
+    maven {
+        url 'https://maven.nova-committee.cn/releases'
+    }
+    flatDir { dirs 'libraries/all' }
+    flatDir { dirs 'libraries/classpathOnly' }
+    flatDir { dirs 'libraries/runtimeOnly' }
+    mavenCentral()
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.16.5-36.2.39'
+    minecraft "net.minecraftforge:forge:${project.minecraft_version}-${project.forge_version}"
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+    options.release.set(JavaLanguageVersion.of("${project.java_version}").asInt())
+
+    javaToolchains {
+        compilerFor {
+            languageVersion.set(JavaLanguageVersion.of("${project.java_version}"))
+        }
+    }
+}
+
+java {
+    def javaVersion = JavaVersion.toVersion("${project.java_version}")
+    if (JavaVersion.current() < javaVersion) {
+        toolchain.languageVersion = JavaLanguageVersion.of("${project.java_version}")
+    }
+    withSourcesJar()
+    archivesBaseName = project.archives_base_name
+}
+
+jarJar.enable()
+
+artifacts {
+    archives jar
+    archives sourcesJar
+    archives tasks.jarJar
+}
+
+tasks.jarJar.configure {
+    classifier ''
+}
+
+reobf {
+    jarJar {}
 }
 
 jar {
-    manifest {
-        attributes([
-                "Specification-Title"     : "clean",
-                "Specification-Vendor"    : "cnlimiter",
-                "Specification-Version"   : "1", // We are version 1 of ourselves
-                "Implementation-Title"    : project.name,
-                "Implementation-Version"  : project.jar.archiveVersion,
-                "Implementation-Vendor"   : "cnlimiter",
-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-        ])
-    }
+    classifier ''
+    from sourceSets.main.output
 }
 
 jar.finalizedBy('reobfJar')
 
-tasks.withType(JavaCompile).configureEach {
-    options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
+tasks.jarJar.finalizedBy('reobfJarJar')
+
+tasks.withType(Jar) {
+    from file('README.md')
+    from file('LICENSE')
+
+    manifest {
+        attributes([
+                'Specification-Title'     : "${project.name}",
+                'Specification-Vendor'    : 'cnlimiter',
+                'Specification-Version'   : "${project.version}",
+                'Implementation-Title'    : "${mod_name}",
+                'Implementation-Version'  : "${project.version}",
+                'Implementation-Vendor'   : 'cnlimiter',
+                'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+
+    if (file("./src/main/resources/${mod_id}.mixins.json").exists()) {
+        manifest {
+            attributes 'MixinConfigs': "${mod_id}.mixins.json"
+        }
+    }
 }
 
 publishing {
     publications {
-        mavenJava(MavenPublication) {
+        mavenJava(MavenPublication) { publication ->
             from components.java
-            version = "${project.mod_version}"
+            version = "${project.version}"
             artifactId = "${project.archives_base_name}"
             groupId = "${project.maven_group}"
             pom {
-                name = 'Atom Sweep'
-                description = ''
+                name = "${project.mod_name}"
+                description = 'Atom Sweep'
+                url = ''
                 licenses {
                     license {
                         name = 'AGPLV3'

@@ -1,12 +1,19 @@
 package nova.committee.atom.sweep.core;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.item.*;
-import net.minecraft.entity.monster.MonsterEntity;
-import net.minecraft.entity.projectile.*;
+
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.ExperienceOrb;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.decoration.ItemFrame;
+import net.minecraft.world.entity.decoration.Painting;
+import net.minecraft.world.entity.item.FallingBlockEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.item.PrimedTnt;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.projectile.*;
+import net.minecraft.world.entity.vehicle.Boat;
 import nova.committee.atom.sweep.Static;
 import nova.committee.atom.sweep.core.model.AESItemEntity;
 import nova.committee.atom.sweep.core.model.AESMobEntity;
@@ -87,9 +94,9 @@ public class Sweeper {
         int killLivingCount = 0;
         int killXpCount = 0;
         int killOtherCount = 0;
-        Iterable<ServerWorld> worlds = server.getAllLevels();
+        Iterable<ServerLevel> worlds = server.getAllLevels();
 
-        for (ServerWorld world : worlds) {
+        for (ServerLevel world : worlds) {
             synchronized (world) {
                 if (Static.config.getItemsClean().isItemEntityCleanupEnable()) {
                     killItemCount += cleanupItemEntity(world);
@@ -111,25 +118,25 @@ public class Sweeper {
         Static.sendMessageToAllPlayers(server, Static.config.getCommon().getSweepNoticeComplete(), killItemCount, killLivingCount, killXpCount, killOtherCount);
     }
 
-    public int cleanupItemEntity(ServerWorld world) {
+    public int cleanupItemEntity(ServerLevel world) {
         return cleanupEntity(world, entity -> entity instanceof ItemEntity, entity -> new AESItemEntity((ItemEntity) entity).filtrate());
     }
 
-    public int cleanupMonsterEntity(ServerWorld world) {
-        return cleanupEntity(world, entity -> entity instanceof MonsterEntity,
-                entity -> new AESMobEntity((MobEntity) entity).filtrate());
+    public int cleanupMonsterEntity(ServerLevel world) {
+        return cleanupEntity(world, entity -> entity instanceof Monster,
+                entity -> new AESMobEntity((Mob) entity).filtrate());
     }
 
-    public int cleanupAnimalEntity(ServerWorld world) {
-        return cleanupEntity(world, entity -> (entity instanceof MobEntity) && !(entity instanceof MonsterEntity),
-                entity -> new AESMobEntity((MobEntity) entity).filtrate());
+    public int cleanupAnimalEntity(ServerLevel world) {
+        return cleanupEntity(world, entity -> (entity instanceof Mob) && !(entity instanceof Monster),
+                entity -> new AESMobEntity((Mob) entity).filtrate());
     }
 
-    public int cleanupXpEntity(ServerWorld world) {
-        return cleanupEntity(world, entity -> entity instanceof ExperienceOrbEntity, entity -> true);
+    public int cleanupXpEntity(ServerLevel world) {
+        return cleanupEntity(world, entity -> entity instanceof ExperienceOrb, entity -> true);
     }
 
-    private int cleanupEntity(ServerWorld world, Predicate<Entity> type, Predicate<Entity> additionalPredicate) {
+    private int cleanupEntity(ServerLevel world, Predicate<Entity> type, Predicate<Entity> additionalPredicate) {
         AtomicInteger amount = new AtomicInteger();
 
         StreamSupport.stream(world.getAllEntities().spliterator(), false)
@@ -139,7 +146,7 @@ public class Sweeper {
                 .filter(additionalPredicate)
                 .forEach(
                         entity -> {
-                            entity.remove();
+                            entity.remove(Entity.RemovalReason.KILLED);
                             if (entity instanceof ItemEntity) {
                                 amount.getAndAdd(((ItemEntity) entity).getItem().getCount());
                             } else {
@@ -152,29 +159,29 @@ public class Sweeper {
     }
 
 
-    public int cleanOtherEntities(ServerWorld world) {
+    public int cleanOtherEntities(ServerLevel world) {
         int amount = 0;
 
         if (Static.config.getOthersClean().isFallingBlocksEntityCleanupEnable())
             amount += cleanupEntity(world, entity -> entity instanceof FallingBlockEntity, entity -> true);
         if (Static.config.getOthersClean().isArrowEntityCleanupEnable())
-            amount += cleanupEntity(world, entity -> entity instanceof AbstractArrowEntity, entity -> !(entity instanceof TridentEntity));
+            amount += cleanupEntity(world, entity -> entity instanceof AbstractArrow, entity -> !(entity instanceof ThrownTrident));
         if (Static.config.getOthersClean().isTridentEntityCleanupEnable())
-            amount += cleanupEntity(world, entity -> entity instanceof TridentEntity, entity -> true);
+            amount += cleanupEntity(world, entity -> entity instanceof ThrownTrident, entity -> true);
         if (Static.config.getOthersClean().isDamagingProjectileEntityCleanupEnable())
-            amount += cleanupEntity(world, entity -> entity instanceof DamagingProjectileEntity, entity -> true);
+            amount += cleanupEntity(world, entity -> entity instanceof AbstractHurtingProjectile, entity -> true);
         if (Static.config.getOthersClean().isShulkerBulletEntityCleanupEnable())
-            amount += cleanupEntity(world, entity -> entity instanceof ShulkerBulletEntity, entity -> true);
+            amount += cleanupEntity(world, entity -> entity instanceof ShulkerBullet, entity -> true);
         if (Static.config.getOthersClean().isFireworkRocketEntityCleanupEnable())
             amount += cleanupEntity(world, entity -> entity instanceof FireworkRocketEntity, entity -> true);
         if (Static.config.getOthersClean().isItemFrameEntityCleanupEnable())
-            amount += cleanupEntity(world, entity -> entity instanceof ItemFrameEntity, entity -> true);
+            amount += cleanupEntity(world, entity -> entity instanceof ItemFrame, entity -> true);
         if (Static.config.getOthersClean().isPaintingEntityCleanupEnable())
-            amount += cleanupEntity(world, entity -> entity instanceof PaintingEntity, entity -> true);
+            amount += cleanupEntity(world, entity -> entity instanceof Painting, entity -> true);
         if (Static.config.getOthersClean().isBoatEntityCleanupEnable())
-            amount += cleanupEntity(world, entity -> entity instanceof BoatEntity, entity -> true);
+            amount += cleanupEntity(world, entity -> entity instanceof Boat, entity -> true);
         if (Static.config.getOthersClean().isTNTEntityCleanupEnable())
-            amount += cleanupEntity(world, entity -> entity instanceof TNTEntity, entity -> true);
+            amount += cleanupEntity(world, entity -> entity instanceof PrimedTnt, entity -> true);
         return amount;
     }
 
