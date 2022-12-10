@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "id": "atomsweep",
+  "version": "${version}",
+  "name": "Sweep",
+  "description": "",
+  "authors": [
+    "cnlimiter"
+  ],
+  "contact": {},
+  "license": "AGPL-3.0",
+  "icon": "assets/atomsweep/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "nova.committee.atom.sweep.Sweep"
+    ]
+  },
+  "mixins": [
+    "sweep.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.14.11",
+    "fabric": "*",
+    "minecraft": "1.19.2"
+  }
+}

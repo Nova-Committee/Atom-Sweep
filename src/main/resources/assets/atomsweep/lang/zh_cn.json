@@ -1,0 +1,13 @@
+{
+
+  "message.atomclean.cleanupItemCountdown": "物品实体将在 %d 秒后被清理！",
+  "message.atomclean.cleanupMobCountdown": "生物实体将在 %d 秒后被清理！",
+  "message.atomclean.cleanupMonsterCountdown": "怪物实体将在 %d 秒后被清理！",
+  "message.atomclean.cleanupAnimalCountdown": "动物实体将在 %d 秒后被清理！",
+
+  "message.atomclean.itemCleanupComplete": "已清除 %d 个物品实体。",
+  "message.atomclean.mobCleanupComplete": "已清除 %d 个生物实体。",
+  "message.atomclean.monsterCleanupComplete": "已清除 %d 个怪物实体。",
+  "message.atomclean.animalCleanupComplete": "已清除 %d 个动物实体。"
+
+}
