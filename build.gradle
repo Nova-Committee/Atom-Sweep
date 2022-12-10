@@ -121,6 +121,7 @@ repositories {
 
 dependencies {
     minecraft "net.minecraftforge:forge:${project.minecraft_version}-${project.forge_version}"
+    compileOnly 'net.luckperms:api:5.4'
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
 }

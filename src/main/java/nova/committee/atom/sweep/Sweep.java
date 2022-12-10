@@ -1,5 +1,6 @@
 package nova.committee.atom.sweep;
 
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.loading.FMLPaths;
 import nova.committee.atom.sweep.util.FileUtils;
@@ -13,7 +14,7 @@ public class Sweep {
     public Sweep() {
         CONFIG_FOLDER = FMLPaths.GAMEDIR.get().resolve("atom");
         FileUtils.checkFolder(CONFIG_FOLDER);
-
+        Static.isLuckPerms = ModList.get().isLoaded("luckperms");
     }
 
 }

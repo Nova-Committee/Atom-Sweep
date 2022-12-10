@@ -3,9 +3,11 @@ package nova.committee.atom.sweep.common.cmd;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import net.minecraft.Util;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ChatType;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.registries.ForgeRegistries;
 import nova.committee.atom.sweep.Static;
 import nova.committee.atom.sweep.core.Sweeper;
@@ -56,7 +58,7 @@ public class SweepCommand {
                                            )
                         )
 
-                        .requires(context -> context.hasPermission(2))
+                        .requires(context -> Static.cmdPermission(context, "atom.sweep.command.all", true))
 
         );
     }
@@ -67,9 +69,9 @@ public class SweepCommand {
         if (ForgeRegistries.ITEMS.getKey(itemStack.getItem()) != null) {
             Static.config.getItemsClean().addItemEntitiesWhitelist(ForgeRegistries.ITEMS.getKey(itemStack.getItem()).toString());
             ConfigHandler.onChange();
-            player.sendSystemMessage(Component.literal("已经添加到白名单"));
+            player.sendMessage(new TextComponent("已经添加到白名单"), ChatType.SYSTEM, Util.NIL_UUID);
         } else {
-            player.sendSystemMessage(Component.literal("添加到白名单失败"));
+            player.sendMessage(new TextComponent("添加到白名单失败"), ChatType.SYSTEM, Util.NIL_UUID);
 
         }
         return 1;
@@ -81,9 +83,9 @@ public class SweepCommand {
         if (ForgeRegistries.ITEMS.getKey(itemStack.getItem()) != null) {
             Static.config.getItemsClean().delItemEntitiesWhitelist(ForgeRegistries.ITEMS.getKey(itemStack.getItem()).toString());
             ConfigHandler.onChange();
-            player.sendSystemMessage(Component.literal("已经从白名单移除"));
+            player.sendMessage(new TextComponent("已经从白名单移除"), ChatType.SYSTEM, Util.NIL_UUID);
         } else {
-            player.sendSystemMessage(Component.literal("从白名单移除失败"));
+            player.sendMessage(new TextComponent("从白名单移除失败"), ChatType.SYSTEM, Util.NIL_UUID);
         }
         return 1;
     }
