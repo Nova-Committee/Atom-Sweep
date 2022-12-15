@@ -92,31 +92,45 @@ public class SweepCommand {
 
     private static int itemsExe(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         var world = context.getSource().getLevel();
-        Sweeper.INSTANCE.cleanupItemEntity(world);
+        var killItemCount = Sweeper.INSTANCE.cleanupItemEntity(world);
+        Static.sendMessageToAllPlayers(world.getServer(), Static.config.getCommon().getSweepNoticeComplete(),
+                killItemCount, 0, 0, 0);
+
         return 1;
     }
 
     private static int monstersExe(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         var world = context.getSource().getLevel();
-        Sweeper.INSTANCE.cleanupMonsterEntity(world);
+        var killLivingCount = Sweeper.INSTANCE.cleanupMonsterEntity(world);
+
+        Static.sendMessageToAllPlayers(world.getServer(), Static.config.getCommon().getSweepNoticeComplete(),
+                0, killLivingCount, 0, 0);
+
         return 1;
     }
 
     private static int animalsExe(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         var world = context.getSource().getLevel();
-        Sweeper.INSTANCE.cleanupAnimalEntity(world);
+        var killLivingCount = Sweeper.INSTANCE.cleanupAnimalEntity(world);
+        Static.sendMessageToAllPlayers(world.getServer(), Static.config.getCommon().getSweepNoticeComplete(),
+                0, killLivingCount, 0, 0);
+
         return 1;
     }
 
     private static int xpsExe(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         var world = context.getSource().getLevel();
-        Sweeper.INSTANCE.cleanupXpEntity(world);
+        var killXpCount = Sweeper.INSTANCE.cleanupXpEntity(world);
+        Static.sendMessageToAllPlayers(world.getServer(), Static.config.getCommon().getSweepNoticeComplete(),
+                0, 0, killXpCount, 0);
         return 1;
     }
 
     private static int othersExe(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         var world = context.getSource().getLevel();
-        Sweeper.INSTANCE.cleanOtherEntities(world);
+        var killOtherCount = Sweeper.INSTANCE.cleanOtherEntities(world);
+        Static.sendMessageToAllPlayers(world.getServer(), Static.config.getCommon().getSweepNoticeComplete(),
+                0, 0, 0, killOtherCount);
         return 1;
     }
 

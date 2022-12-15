@@ -141,7 +141,7 @@ public class Sweeper {
 
         StreamSupport.stream(world.getAllEntities().spliterator(), false)
                 .filter(Objects::nonNull)
-                .filter(entity -> !entity.hasCustomName())
+                .filter(entity -> entity.getCustomName() != null)
                 .filter(type)
                 .filter(additionalPredicate)
                 .forEach(
