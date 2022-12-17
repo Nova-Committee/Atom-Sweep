@@ -13,15 +13,6 @@ import java.util.Set;
  * Version: 1.0
  */
 public class SweepConfig {
-    private final String configName;
-
-    public SweepConfig() {
-        this.configName = "atom_sweep";
-    }
-
-    public String getConfigName() {
-        return configName;
-    }
 
     @SerializedName("items_clean")
     private ItemEntitiesClean itemsClean = new ItemEntitiesClean();
@@ -32,6 +23,9 @@ public class SweepConfig {
     @SerializedName("common")
     private Common common = new Common();
 
+    public String getConfigName() {
+        return "atom_sweep";
+    }
 
     public ItemEntitiesClean getItemsClean() {
         return itemsClean;

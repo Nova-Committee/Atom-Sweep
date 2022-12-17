@@ -97,7 +97,6 @@ public class Sweeper {
         Iterable<ServerLevel> worlds = server.getAllLevels();
 
         for (ServerLevel world : worlds) {
-            synchronized (world) {
                 if (Static.config.getItemsClean().isItemEntityCleanupEnable()) {
                     killItemCount += cleanupItemEntity(world);
                 }
@@ -112,7 +111,7 @@ public class Sweeper {
 
                 killOtherCount += cleanOtherEntities(world);
 
-            }
+
         }
 
         Static.sendMessageToAllPlayers(server, Static.config.getCommon().getSweepNoticeComplete(), killItemCount, killLivingCount, killXpCount, killOtherCount);
