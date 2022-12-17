@@ -15,7 +15,6 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.projectile.*;
 import net.minecraft.world.entity.vehicle.Boat;
 import nova.committee.atom.sweep.Static;
-import nova.committee.atom.sweep.core.model.AESItemEntity;
 import nova.committee.atom.sweep.core.model.AESMobEntity;
 import nova.committee.atom.sweep.init.handler.SweepHandler;
 
@@ -118,7 +117,7 @@ public class Sweeper {
     }
 
     public int cleanupItemEntity(ServerLevel world) {
-        return cleanupEntity(world, entity -> entity instanceof ItemEntity, entity -> new AESItemEntity((ItemEntity) entity).filtrate());
+        return cleanupEntity(world, entity -> entity instanceof ItemEntity, entity -> true);
     }
 
     public int cleanupMonsterEntity(ServerLevel world) {
@@ -137,22 +136,23 @@ public class Sweeper {
 
     private int cleanupEntity(ServerLevel world, Predicate<Entity> type, Predicate<Entity> additionalPredicate) {
         AtomicInteger amount = new AtomicInteger();
-
         StreamSupport.stream(world.getAllEntities().spliterator(), false)
+
                 .filter(Objects::nonNull)
-                .filter(entity -> entity.getCustomName() != null)
+                .filter(entity -> entity.getCustomName() == null)
                 .filter(type)
                 .filter(additionalPredicate)
                 .forEach(
                         entity -> {
-                            entity.remove(Entity.RemovalReason.KILLED);
+                            entity.kill();
                             if (entity instanceof ItemEntity) {
                                 amount.getAndAdd(((ItemEntity) entity).getItem().getCount());
                             } else {
                                 amount.getAndIncrement();
                             }
                         }
-                );
+                )
+        ;
 
         return amount.get();
     }
