@@ -3,11 +3,12 @@ package nova.committee.atom.sweep;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.server.ServerAboutToStartEvent;
-import net.minecraftforge.event.server.ServerStartedEvent;
-import net.minecraftforge.event.server.ServerStoppedEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
+import net.minecraftforge.fml.event.server.FMLServerStartedEvent;
+import net.minecraftforge.fml.event.server.FMLServerStoppedEvent;
+import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
 import nova.committee.atom.sweep.common.cmd.SweepCommand;
 import org.jetbrains.annotations.NotNull;
 
@@ -27,12 +28,12 @@ public class Sweep {
     }
 
     @SubscribeEvent
-    public void onServerAboutToStart(@NotNull ServerAboutToStartEvent event) {
+    public void onServerAboutToStart(@NotNull FMLServerAboutToStartEvent event) {
         this.sweep.onServerStarting(event.getServer());
     }
 
     @SubscribeEvent
-    public void onServerStarted(@NotNull ServerStartedEvent event) {
+    public void onServerStarted(@NotNull FMLServerStartedEvent event) {
         this.sweep.onServerStarted(event.getServer());
     }
 
@@ -42,12 +43,12 @@ public class Sweep {
     }
 
     @SubscribeEvent
-    public void onServerStopping(@NotNull ServerStoppedEvent event) {
+    public void onServerStopping(@NotNull FMLServerStoppingEvent event) {
         this.sweep.onServerStopping(event.getServer());
     }
 
     @SubscribeEvent
-    public void onServerStopped(@NotNull ServerStoppedEvent event) {
+    public void onServerStopped(@NotNull FMLServerStoppedEvent event) {
         this.sweep.onServerStopped(event.getServer());
     }
 

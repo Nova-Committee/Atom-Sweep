@@ -2,10 +2,9 @@ package nova.committee.atom.sweep.init.handler;
 
 
 import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 import nova.committee.atom.sweep.Static;
 import nova.committee.atom.sweep.core.Sweeper;
+import nova.committee.atom.sweep.init.config.ModConfig;
 
 import java.util.Optional;
 
@@ -15,17 +14,15 @@ import java.util.Optional;
  * Date: 2022/4/8 15:00
  * Version: 1.0
  */
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class SweepHandler {
 
 
     private static int counter = -1;
 
     public static void beginSweepCountDown() {
-        counter = Static.config.getCommon().getSweepDiscount() * 20;
+        counter = ModConfig.INSTANCE.getCommon().getSweepDiscount() * 20;
     }
 
-    @SubscribeEvent
     public static void onServerTick(TickEvent.ServerTickEvent event) {
         if (event.phase == TickEvent.Phase.END) {
             Optional.ofNullable(Static.SERVER).ifPresent(server -> {
@@ -35,7 +32,7 @@ public class SweepHandler {
                         counter = -1;
                     } else {
                         if (counter % 20 == 0) {
-                            Static.sendMessageToAllPlayers(Static.config.getCommon().getSweepNotice(), counter / 20);
+                            Static.sendMessageToAllPlayers(ModConfig.INSTANCE.getCommon().getSweepNotice(), counter / 20);
                         }
 
                         --counter;

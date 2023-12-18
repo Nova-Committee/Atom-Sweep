@@ -3,15 +3,12 @@ package nova.committee.atom.sweep.common.cmd;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.minecraft.Util;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.ChatType;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.registries.ForgeRegistries;
 import nova.committee.atom.sweep.Static;
 import nova.committee.atom.sweep.core.Sweeper;
-import nova.committee.atom.sweep.init.handler.ConfigHandler;
+import nova.committee.atom.sweep.init.config.ModConfig;
 
 
 /**
@@ -67,12 +64,11 @@ public class SweepCommand {
         var player = context.getSource().getPlayerOrException();
         var itemStack = player.getMainHandItem();
         if (ForgeRegistries.ITEMS.getKey(itemStack.getItem()) != null) {
-            Static.config.getItemsClean().addItemEntitiesWhitelist(ForgeRegistries.ITEMS.getKey(itemStack.getItem()).toString());
-            ConfigHandler.onChange();
-            player.sendMessage(new TextComponent("已经添加到白名单"), ChatType.SYSTEM, Util.NIL_UUID);
+            ModConfig.INSTANCE.getItem().addItemEntitiesWhitelist(ForgeRegistries.ITEMS.getKey(itemStack.getItem()).toString());
+            ModConfig.INSTANCE.save();
+            Static.sendMessage(player, "message.cmd.white.add.success");
         } else {
-            player.sendMessage(new TextComponent("添加到白名单失败"), ChatType.SYSTEM, Util.NIL_UUID);
-
+            Static.sendMessage(player, "message.cmd.white.add.fail");
         }
         return 1;
     }
@@ -81,11 +77,11 @@ public class SweepCommand {
         var player = context.getSource().getPlayerOrException();
         var itemStack = player.getMainHandItem();
         if (ForgeRegistries.ITEMS.getKey(itemStack.getItem()) != null) {
-            Static.config.getItemsClean().delItemEntitiesWhitelist(ForgeRegistries.ITEMS.getKey(itemStack.getItem()).toString());
-            ConfigHandler.onChange();
-            player.sendMessage(new TextComponent("已经从白名单移除"), ChatType.SYSTEM, Util.NIL_UUID);
+            ModConfig.INSTANCE.getItem().delItemEntitiesWhitelist(ForgeRegistries.ITEMS.getKey(itemStack.getItem()).toString());
+            ModConfig.INSTANCE.save();
+            Static.sendMessage(player, "message.cmd.white.del.success");
         } else {
-            player.sendMessage(new TextComponent("从白名单移除失败"), ChatType.SYSTEM, Util.NIL_UUID);
+            Static.sendMessage(player, "message.cmd.white.del.success");
         }
         return 1;
     }
@@ -93,7 +89,7 @@ public class SweepCommand {
     private static int itemsExe(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         var world = context.getSource().getLevel();
         var killItemCount = Sweeper.INSTANCE.cleanupItemEntity(world);
-        Static.sendMessageToAllPlayers(world.getServer(), Static.config.getCommon().getSweepNoticeComplete(),
+        Static.sendMessageToAllPlayers(world.getServer(), ModConfig.INSTANCE.getCommon().getSweepNoticeComplete(),
                 killItemCount, 0, 0, 0);
 
         return 1;
@@ -103,7 +99,7 @@ public class SweepCommand {
         var world = context.getSource().getLevel();
         var killLivingCount = Sweeper.INSTANCE.cleanupMonsterEntity(world);
 
-        Static.sendMessageToAllPlayers(world.getServer(), Static.config.getCommon().getSweepNoticeComplete(),
+        Static.sendMessageToAllPlayers(world.getServer(), ModConfig.INSTANCE.getCommon().getSweepNoticeComplete(),
                 0, killLivingCount, 0, 0);
 
         return 1;
@@ -112,7 +108,7 @@ public class SweepCommand {
     private static int animalsExe(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         var world = context.getSource().getLevel();
         var killLivingCount = Sweeper.INSTANCE.cleanupAnimalEntity(world);
-        Static.sendMessageToAllPlayers(world.getServer(), Static.config.getCommon().getSweepNoticeComplete(),
+        Static.sendMessageToAllPlayers(world.getServer(), ModConfig.INSTANCE.getCommon().getSweepNoticeComplete(),
                 0, killLivingCount, 0, 0);
 
         return 1;
@@ -121,7 +117,7 @@ public class SweepCommand {
     private static int xpsExe(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         var world = context.getSource().getLevel();
         var killXpCount = Sweeper.INSTANCE.cleanupXpEntity(world);
-        Static.sendMessageToAllPlayers(world.getServer(), Static.config.getCommon().getSweepNoticeComplete(),
+        Static.sendMessageToAllPlayers(world.getServer(), ModConfig.INSTANCE.getCommon().getSweepNoticeComplete(),
                 0, 0, killXpCount, 0);
         return 1;
     }
@@ -129,7 +125,7 @@ public class SweepCommand {
     private static int othersExe(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         var world = context.getSource().getLevel();
         var killOtherCount = Sweeper.INSTANCE.cleanOtherEntities(world);
-        Static.sendMessageToAllPlayers(world.getServer(), Static.config.getCommon().getSweepNoticeComplete(),
+        Static.sendMessageToAllPlayers(world.getServer(), ModConfig.INSTANCE.getCommon().getSweepNoticeComplete(),
                 0, 0, 0, killOtherCount);
         return 1;
     }

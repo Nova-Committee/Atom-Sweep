@@ -15,7 +15,8 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.projectile.*;
 import net.minecraft.world.entity.vehicle.Boat;
 import nova.committee.atom.sweep.Static;
-import nova.committee.atom.sweep.core.model.AESMobEntity;
+import nova.committee.atom.sweep.core.model.ASMob;
+import nova.committee.atom.sweep.init.config.ModConfig;
 import nova.committee.atom.sweep.init.handler.SweepHandler;
 
 import java.util.Objects;
@@ -73,10 +74,10 @@ public class Sweeper {
                         }
 
                     }
-                }, (long) (Static.config.getCommon().getSweepNotify() - Static.config.getCommon().getSweepDiscount()) * 1000L);
+                }, (long) (ModConfig.INSTANCE.getCommon().getSweepNotify() - ModConfig.INSTANCE.getCommon().getSweepDiscount()) * 1000L);
             }
         };
-        this.timer.schedule(this.currentTask, 0L, (long) Static.config.getCommon().getSweepPeriod() * 60L * 1000L);
+        this.timer.schedule(this.currentTask, 0L, (long) ModConfig.INSTANCE.getCommon().getSweepPeriod() * 60L * 1000L);
     }
 
     public void startSweepTick() {
@@ -84,7 +85,7 @@ public class Sweeper {
     }
 
     public void noticeSweep() {
-        Static.sendMessageToAllPlayers(Static.config.getCommon().getSweepNotice(), Static.config.getCommon().getSweepNotify());
+        Static.sendMessageToAllPlayers(ModConfig.INSTANCE.getCommon().getSweepNotice(), ModConfig.INSTANCE.getCommon().getSweepNotify());
     }
 
 
@@ -96,16 +97,16 @@ public class Sweeper {
         Iterable<ServerLevel> worlds = server.getAllLevels();
 
         for (ServerLevel world : worlds) {
-                if (Static.config.getItemsClean().isItemEntityCleanupEnable()) {
+            if (ModConfig.INSTANCE.getItem().isItemEntityCleanupEnable()) {
                     killItemCount += cleanupItemEntity(world);
                 }
-                if (Static.config.getMobsClean().isMobEntityCleanupEnable()) {
-                    if (Static.config.getMobsClean().isAnimalEntitiesCleanupEnable())
+            if (ModConfig.INSTANCE.getMob().isMobEntityCleanupEnable()) {
+                if (ModConfig.INSTANCE.getMob().isAnimalEntitiesCleanupEnable())
                         killLivingCount += cleanupAnimalEntity(world);
-                    if (Static.config.getMobsClean().isMonsterEntitiesCleanupEnable())
+                if (ModConfig.INSTANCE.getMob().isMonsterEntitiesCleanupEnable())
                         killLivingCount += cleanupMonsterEntity(world);
                 }
-                if (Static.config.getOthersClean().isExperienceOrbEntityCleanupEnable())
+            if (ModConfig.INSTANCE.getOther().isExperienceOrbEntityCleanupEnable())
                     killXpCount += cleanupXpEntity(world);
 
                 killOtherCount += cleanOtherEntities(world);
@@ -113,7 +114,7 @@ public class Sweeper {
 
         }
 
-        Static.sendMessageToAllPlayers(server, Static.config.getCommon().getSweepNoticeComplete(), killItemCount, killLivingCount, killXpCount, killOtherCount);
+        Static.sendMessageToAllPlayers(server, ModConfig.INSTANCE.getCommon().getSweepNoticeComplete(), killItemCount, killLivingCount, killXpCount, killOtherCount);
     }
 
     public int cleanupItemEntity(ServerLevel world) {
@@ -122,12 +123,12 @@ public class Sweeper {
 
     public int cleanupMonsterEntity(ServerLevel world) {
         return cleanupEntity(world, entity -> entity instanceof Monster,
-                entity -> new AESMobEntity((Mob) entity).filtrate());
+                entity -> new ASMob((Mob) entity).filtrate());
     }
 
     public int cleanupAnimalEntity(ServerLevel world) {
         return cleanupEntity(world, entity -> (entity instanceof Mob) && !(entity instanceof Monster),
-                entity -> new AESMobEntity((Mob) entity).filtrate());
+                entity -> new ASMob((Mob) entity).filtrate());
     }
 
     public int cleanupXpEntity(ServerLevel world) {
@@ -161,25 +162,25 @@ public class Sweeper {
     public int cleanOtherEntities(ServerLevel world) {
         int amount = 0;
 
-        if (Static.config.getOthersClean().isFallingBlocksEntityCleanupEnable())
+        if (ModConfig.INSTANCE.getOther().isFallingBlocksEntityCleanupEnable())
             amount += cleanupEntity(world, entity -> entity instanceof FallingBlockEntity, entity -> true);
-        if (Static.config.getOthersClean().isArrowEntityCleanupEnable())
+        if (ModConfig.INSTANCE.getOther().isArrowEntityCleanupEnable())
             amount += cleanupEntity(world, entity -> entity instanceof AbstractArrow, entity -> !(entity instanceof ThrownTrident));
-        if (Static.config.getOthersClean().isTridentEntityCleanupEnable())
+        if (ModConfig.INSTANCE.getOther().isTridentEntityCleanupEnable())
             amount += cleanupEntity(world, entity -> entity instanceof ThrownTrident, entity -> true);
-        if (Static.config.getOthersClean().isDamagingProjectileEntityCleanupEnable())
+        if (ModConfig.INSTANCE.getOther().isDamagingProjectileEntityCleanupEnable())
             amount += cleanupEntity(world, entity -> entity instanceof AbstractHurtingProjectile, entity -> true);
-        if (Static.config.getOthersClean().isShulkerBulletEntityCleanupEnable())
+        if (ModConfig.INSTANCE.getOther().isShulkerBulletEntityCleanupEnable())
             amount += cleanupEntity(world, entity -> entity instanceof ShulkerBullet, entity -> true);
-        if (Static.config.getOthersClean().isFireworkRocketEntityCleanupEnable())
+        if (ModConfig.INSTANCE.getOther().isFireworkRocketEntityCleanupEnable())
             amount += cleanupEntity(world, entity -> entity instanceof FireworkRocketEntity, entity -> true);
-        if (Static.config.getOthersClean().isItemFrameEntityCleanupEnable())
+        if (ModConfig.INSTANCE.getOther().isItemFrameEntityCleanupEnable())
             amount += cleanupEntity(world, entity -> entity instanceof ItemFrame, entity -> true);
-        if (Static.config.getOthersClean().isPaintingEntityCleanupEnable())
+        if (ModConfig.INSTANCE.getOther().isPaintingEntityCleanupEnable())
             amount += cleanupEntity(world, entity -> entity instanceof Painting, entity -> true);
-        if (Static.config.getOthersClean().isBoatEntityCleanupEnable())
+        if (ModConfig.INSTANCE.getOther().isBoatEntityCleanupEnable())
             amount += cleanupEntity(world, entity -> entity instanceof Boat, entity -> true);
-        if (Static.config.getOthersClean().isTNTEntityCleanupEnable())
+        if (ModConfig.INSTANCE.getOther().isTNTEntityCleanupEnable())
             amount += cleanupEntity(world, entity -> entity instanceof PrimedTnt, entity -> true);
         return amount;
     }

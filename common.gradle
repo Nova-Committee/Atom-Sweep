@@ -1,0 +1,106 @@
+apply(plugin: "dev.architectury.loom")
+apply(plugin: "maven-publish")
+apply(plugin: "com.replaymod.preprocess")
+
+int mcVersion = 1
+
+preprocess {
+    mcVersion = vars.get().get("MC")
+    tabIndentation.set(false)
+}
+
+
+repositories {
+    mavenCentral()
+    maven { url 'https://maven.nova-committee.cn/releases' }
+    maven { url 'https://maven.mohistmc.com/' }
+
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings loom.officialMojangMappings()
+    forge "net.minecraftforge:forge:${project.minecraft_version}-${project.forge_version}"
+    implementation forgeRuntimeLibrary(include("cn.evole.config:AtomConfig-Toml:${project.toml_version}"))
+
+    compileOnly "net.luckperms:api:${lickperms_version}"
+    compileOnly "org.projectlombok:lombok:${lombok_version}"
+    annotationProcessor "org.projectlombok:lombok:${lombok_version}"
+
+}
+
+loom {
+    silentMojangMappingsLicense()
+}
+
+remapJar {
+    remapperIsolation = true
+}
+
+
+tasks.register('copyJars', Copy) {
+    from "$projectDir/build/libs"
+    into "$rootDir/build/libs"
+}
+
+buildNeeded.finalizedBy("copyJars")
+
+version = mod_version
+group = mod_group_id
+archivesBaseName = mod_name + "-" + minecraft_dependency
+
+processResources {
+    outputs.upToDateWhen { false }
+
+    var replaceProperties = [
+            minecraft_version   : minecraft_version, minecraft_version_range: minecraft_version_range,
+            forge_version       : forge_version,
+            loader_version_range: loader_version_range,
+            mod_id              : mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
+            mod_authors         : mod_authors, mod_description: mod_description,
+            pack_format_number  : pack_format_number
+    ]
+
+    inputs.properties replaceProperties
+
+    filesMatching(["META-INF/mods.toml", "pack.mcmeta"]) {
+        expand replaceProperties + [project: project]
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.setEncoding("UTF-8")
+}
+
+jar {
+    from("../../LICENSE") {
+        rename { "${it}_${project.mod_name}" }
+    }
+}
+
+
+publishing {
+    publications {
+        create("mavenJava", MavenPublication) {
+            from(components.java)
+            version("${mod_version}")
+            artifactId("${mod_name}-${minecraft_dependency}")
+            groupId("${mod_group_id}")
+        }
+    }
+
+    repositories {
+        mavenLocal()
+        if (System.getenv('MAVEN_USERNAME') != null && System.getenv('MAVEN_PASSWORD') != null) {
+            maven {
+                name 'release'
+                url = 'https://maven.nova-committee.cn/releases'
+
+                credentials {
+                    username System.getenv('MAVEN_USERNAME')
+                    password System.getenv('MAVEN_PASSWORD')
+                }
+            }
+        }
+    }
+}

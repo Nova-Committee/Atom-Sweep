@@ -5,6 +5,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import nova.committee.atom.sweep.Static;
+import nova.committee.atom.sweep.init.config.ModConfig;
 
 
 /**
@@ -13,20 +14,20 @@ import nova.committee.atom.sweep.Static;
  * Date: 2022/4/8 15:03
  * Version: 1.0
  */
-public class AESMobEntity {
+public class ASMob {
     private final Mob entity;
     private final ResourceLocation registryName;
 
-    public AESMobEntity(Mob entity) {
+    public ASMob(Mob entity) {
         this.entity = entity;
         this.registryName = EntityType.getKey(entity.getType());
     }
 
     public boolean filtrate() {
         int index;
-        if (Static.config.getMobsClean().isMobEntityCleanupEnable()) {
+        if (ModConfig.INSTANCE.getMob().isMobEntityCleanupEnable()) {
             // Whitelist
-            for (String s : Static.config.getMobsClean().getMobEntitiesWhitelist()) {
+            for (String s : ModConfig.INSTANCE.getMob().getMobEntitiesWhitelist()) {
                 if (s.equals(this.registryName.toString())) {
                     return false;
                 } else if ((index = s.indexOf('*')) != -1) {
@@ -39,8 +40,8 @@ public class AESMobEntity {
             return true;
         } else {
             // Blacklist
-            for (String s : Static.config.getMobsClean().getMobEntitiesBlacklist()) {
-                if (AESItemEntity.itemMatch(s, this.registryName)) return true;
+            for (String s : ModConfig.INSTANCE.getMob().getMobEntitiesBlacklist()) {
+                if (ASItem.itemMatch(s, this.registryName)) return true;
             }
             return false;
         }

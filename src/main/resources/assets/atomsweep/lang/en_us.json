@@ -7,6 +7,9 @@
   "message.atomclean.itemCleanupComplete": "%d item entity(entities) removed",
   "message.atomclean.mobCleanupComplete": "%d mob entity(entities) removed",
   "message.atomclean.monsterCleanupComplete": "%d monster entity(entities) removed",
-  "message.atomclean.animalCleanupComplete": "%d animal entity(entities) removed"
-
+  "message.atomclean.animalCleanupComplete": "%d animal entity(entities) removed",
+  "message.cmd.white.add.success": "",
+  "message.cmd.white.add.fail": "",
+  "message.cmd.white.del.success": "",
+  "message.cmd.white.del.fail": ""
 }

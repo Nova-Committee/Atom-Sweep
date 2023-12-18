@@ -6,6 +6,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraftforge.registries.ForgeRegistries;
 import nova.committee.atom.sweep.Static;
+import nova.committee.atom.sweep.init.config.ModConfig;
 
 /**
  * Description:
@@ -13,11 +14,11 @@ import nova.committee.atom.sweep.Static;
  * Date: 2022/4/8 14:58
  * Version: 1.0
  */
-public class AESItemEntity {
+public class ASItem {
     private final ItemEntity entity;
     private final ResourceLocation registryName;
 
-    public AESItemEntity(ItemEntity entity) {
+    public ASItem(ItemEntity entity) {
         this.entity = entity;
         this.registryName = ForgeRegistries.ITEMS.getKey(this.entity.getItem().getItem());
     }
@@ -26,15 +27,15 @@ public class AESItemEntity {
      * @return 白名单或者黑名单
      */
     public boolean filtrate() {
-        if (Static.config.getItemsClean().isItemEntitiesMatchMode()) {
+        if (ModConfig.INSTANCE.getItem().isItemEntitiesMatchMode()) {
             // Whitelist
-            for (String s : Static.config.getItemsClean().getItemEntitiesWhitelist()) {
+            for (String s : ModConfig.INSTANCE.getItem().getItemEntitiesWhitelist()) {
                 if (itemMatch(s, this.registryName)) return false;
             }
             return true;
         } else {
             // Blacklist
-            for (String s : Static.config.getItemsClean().getItemEntitiesBlacklist()) {
+            for (String s : ModConfig.INSTANCE.getItem().getItemEntitiesBlacklist()) {
                 if (itemMatch(s, this.registryName)) return true;
             }
             return false;
