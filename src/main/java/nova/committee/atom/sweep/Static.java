@@ -9,7 +9,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.server.ServerLifecycleHooks;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -17,6 +16,17 @@ import java.nio.file.Path;
 import java.text.MessageFormat;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
+//#if MC < 11900
+//$$ import net.minecraft.network.chat.TextComponent;
+//$$ import net.minecraft.network.chat.ChatType;
+//$$ import net.minecraft.Util;
+//$$ import net.minecraft.network.chat.TranslatableComponent;
+//#endif
+
+//#if MC < 11700
+//$$ import net.minecraftforge.fml.server.ServerLifecycleHooks;
+//#else
+import net.minecraftforge.server.ServerLifecycleHooks;
 //#endif
 /**
  * Description:

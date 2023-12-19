@@ -148,7 +148,7 @@ public class Sweeper {
                         .filter(additionalPredicate)
                         .forEach(
                                 entity -> {
-                                    entity.remove(Entity.RemovalReason.KILLED);
+                                    entity.kill();
                                     if (entity instanceof ItemEntity) {
                                         amount.getAndAdd(((ItemEntity) entity).getItem().getCount());
                                     } else {
