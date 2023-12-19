@@ -3,9 +3,6 @@ package nova.committee.atom.sweep.init.config;
 import cn.evole.config.toml.AutoLoadTomlConfig;
 import cn.evole.config.toml.annotation.TableField;
 import cn.evole.libs.tomlj.TomlTable;
-import com.google.gson.annotations.Expose;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  * Name: atomsweep / CommonConfig
@@ -15,16 +12,16 @@ import lombok.Setter;
  */
 
 public class CommonConfig extends AutoLoadTomlConfig {
-    @TableField(rightComment = "开启q群功能")
+    @TableField(rightComment = "扫地周期（分钟）")
     private int sweepPeriod = 4;
-    @TableField(rightComment = "开启q群功能")
+    @TableField(rightComment = "提前通知时间（秒）")
     private int sweepNotify = 20;
-    @TableField(rightComment = "开启q群功能")
+    @TableField(rightComment = "倒计时时间（秒）")
     private int sweepDiscount = 5;
-    @TableField(rightComment = "开启q群功能")
-    private String sweepNotice = "<演变> 注意：还有 %d 秒就要去你家吃饭了~";
-    @TableField(rightComment = "开启q群功能")
-    private String sweepNoticeComplete = "<演变> 这次一共吃掉了 %d 个掉落物， %d 个生物 %d 个经验球和 %d 个其他实体~";
+    @TableField(rightComment = "通知提示")
+    private String sweepNotice = "<演变> 注意：还有 {0} 秒就要去你家吃饭了~";
+    @TableField(rightComment = "清扫完通知提示")
+    private String sweepNoticeComplete = "<演变> 这次一共吃掉了 {0} 个掉落物， {1} 个生物 {2} 个经验球和 {3} 个其他实体~";
 
     public CommonConfig() {
         super(null);

@@ -27,19 +27,23 @@ public class ASItem {
      * @return 白名单或者黑名单
      */
     public boolean filtrate() {
-        if (ModConfig.INSTANCE.getItem().isItemEntitiesMatchMode()) {
+        if (ModConfig.INSTANCE.getItem().isItemWhiteMode()) {
             // Whitelist
             for (String s : ModConfig.INSTANCE.getItem().getItemEntitiesWhitelist()) {
                 if (itemMatch(s, this.registryName)) return false;
             }
             return true;
-        } else {
+        }
+
+        if (ModConfig.INSTANCE.getItem().isItemBlackMode()) {
             // Blacklist
             for (String s : ModConfig.INSTANCE.getItem().getItemEntitiesBlacklist()) {
                 if (itemMatch(s, this.registryName)) return true;
             }
             return false;
         }
+
+        return true;
     }
 
     static boolean itemMatch(String s, ResourceLocation registryName) {

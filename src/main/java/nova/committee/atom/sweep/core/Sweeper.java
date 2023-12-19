@@ -15,7 +15,9 @@ import net.minecraft.world.entity.item.PrimedTnt;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.projectile.*;
 import net.minecraft.world.entity.vehicle.Boat;
+import net.minecraft.world.item.Item;
 import nova.committee.atom.sweep.Static;
+import nova.committee.atom.sweep.core.model.ASItem;
 import nova.committee.atom.sweep.core.model.ASMob;
 import nova.committee.atom.sweep.init.config.ModConfig;
 import nova.committee.atom.sweep.init.handler.SweepHandler;
@@ -92,22 +94,23 @@ public class Sweeper {
         int killLivingCount = 0;
         int killXpCount = 0;
         int killOtherCount = 0;
+
         Iterable<ServerLevel> worlds = server.getAllLevels();
 
         for (ServerLevel world : worlds) {
             if (ModConfig.INSTANCE.getItem().isItemEntityCleanupEnable()) {
-                    killItemCount += cleanupItemEntity(world);
-                }
+                killItemCount += cleanupItemEntity(world);
+            }
             if (ModConfig.INSTANCE.getMob().isMobEntityCleanupEnable()) {
                 if (ModConfig.INSTANCE.getMob().isAnimalEntitiesCleanupEnable())
                         killLivingCount += cleanupAnimalEntity(world);
                 if (ModConfig.INSTANCE.getMob().isMonsterEntitiesCleanupEnable())
                         killLivingCount += cleanupMonsterEntity(world);
-                }
+            }
             if (ModConfig.INSTANCE.getOther().isExperienceOrbEntityCleanupEnable())
-                    killXpCount += cleanupXpEntity(world);
+                killXpCount += cleanupXpEntity(world);
 
-                killOtherCount += cleanOtherEntities(world);
+            killOtherCount += cleanOtherEntities(world);
 
 
         }
@@ -116,7 +119,7 @@ public class Sweeper {
     }
 
     public int cleanupItemEntity(ServerLevel world) {
-        return cleanupEntity(world, entity -> entity instanceof ItemEntity, entity -> true);
+        return cleanupEntity(world, entity -> entity instanceof ItemEntity, entity -> new ASItem((ItemEntity) entity).filtrate());
     }
 
     public int cleanupMonsterEntity(ServerLevel world) {

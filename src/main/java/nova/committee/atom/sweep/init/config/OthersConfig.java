@@ -12,27 +12,27 @@ import cn.evole.libs.tomlj.TomlTable;
  */
 
 public class OthersConfig extends AutoLoadTomlConfig {
-    @TableField(rightComment = "开启q群功能")
+    @TableField(rightComment = "经验球实体清理功能")
     private boolean isExperienceOrbEntityCleanupEnable = true;
-    @TableField(rightComment = "开启q群功能")
+    @TableField(rightComment = "下落方块实体清理功能")
     private boolean isFallingBlocksEntityCleanupEnable = true;
-    @TableField(rightComment = "开启q群功能")
+    @TableField(rightComment = "箭头实体清理功能")
     private boolean isArrowEntityCleanupEnable = true;
-    @TableField(rightComment = "开启q群功能")
+    @TableField(rightComment = "三叉戟实体清理功能")
     private boolean isTridentEntityCleanupEnable = false;
-    @TableField(rightComment = "开启q群功能")
+    @TableField(rightComment = "投射物实体清理功能")
     private boolean isDamagingProjectileEntityCleanupEnable = false;
-    @TableField(rightComment = "开启q群功能")
+    @TableField(rightComment = "子弹实体清理功能")
     private boolean isShulkerBulletEntityCleanupEnable = true;
-    @TableField(rightComment = "开启q群功能")
+    @TableField(rightComment = "烟花火箭实体清理功能")
     private boolean isFireworkRocketEntityCleanupEnable = false;
-    @TableField(rightComment = "开启q群功能")
+    @TableField(rightComment = "物品框实体清理功能")
     private boolean isItemFrameEntityCleanupEnable = false;
-    @TableField(rightComment = "开启q群功能")
+    @TableField(rightComment = "画实体清理功能")
     private boolean isPaintingEntityCleanupEnable = false;
-    @TableField(rightComment = "开启q群功能")
+    @TableField(rightComment = "船实体清理功能")
     private boolean isBoatEntityCleanupEnable = false;
-    @TableField(rightComment = "开启q群功能")
+    @TableField(rightComment = "TNT实体清理功能")
     private boolean isTNTEntityCleanupEnable = true;
 
     public boolean isExperienceOrbEntityCleanupEnable() {

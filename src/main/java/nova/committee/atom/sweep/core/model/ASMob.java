@@ -25,26 +25,36 @@ public class ASMob {
 
     public boolean filtrate() {
         int index;
-        if (ModConfig.INSTANCE.getMob().isMobEntityCleanupEnable()) {
+        if (ModConfig.INSTANCE.getMob().isMobWhiteMode()) {
             // Whitelist
             for (String s : ModConfig.INSTANCE.getMob().getMobEntitiesWhitelist()) {
-                if (s.equals(this.registryName.toString())) {
-                    return false;
-                } else if ((index = s.indexOf('*')) != -1) {
-                    s = s.substring(0, index - 1);
-                    if (this.registryName.getNamespace().equals(s)) {
-                        return false;
-                    }
-                }
+                if (mobMatch(s, this.registryName)) return false;
             }
             return true;
-        } else {
+        }
+
+        if (ModConfig.INSTANCE.getMob().isMobBlackMode()) {
             // Blacklist
             for (String s : ModConfig.INSTANCE.getMob().getMobEntitiesBlacklist()) {
-                if (ASItem.itemMatch(s, this.registryName)) return true;
+                if (mobMatch(s, this.registryName)) return true;
             }
             return false;
         }
+
+        return true;
+    }
+
+    static boolean mobMatch(String s, ResourceLocation registryName) {
+        int index;
+        if (s.equals(registryName.toString())) {
+            return true;
+        } else if ((index = s.indexOf('*')) != -1) {
+            s = s.substring(0, index - 1);
+            if (registryName.getNamespace().equals(s)) {
+                return false;
+            }
+        }
+        return false;
     }
 
     public Mob getEntity() {

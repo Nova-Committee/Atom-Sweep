@@ -15,13 +15,15 @@ import java.util.List;
  */
 
 public class ItemsConfig extends AutoLoadTomlConfig {
-    @TableField(rightComment = "开启q群功能")
+    @TableField(rightComment = "物品实体清理功能")
     private boolean isItemEntityCleanupEnable = true;
-    @TableField(rightComment = "开启q群功能")
-    private boolean itemEntitiesMatchMode = true;
-    @TableField(rightComment = "开启q群功能")
+    @TableField(rightComment = "白名单模式")
+    private boolean itemWhiteMode = true;
+    @TableField(rightComment = "黑名单模式")
+    private boolean itemBlackMode = true;
+    @TableField(rightComment = "白名单")
     private List<String> itemEntitiesWhitelist = Arrays.asList("minecraft:diamond", "minecraft:emerald");
-    @TableField(rightComment = "开启q群功能")
+    @TableField(rightComment = "黑名单")
     private List<String> itemEntitiesBlacklist = List.of();
 
     public ItemsConfig() {
@@ -42,12 +44,20 @@ public class ItemsConfig extends AutoLoadTomlConfig {
         isItemEntityCleanupEnable = itemEntityCleanupEnable;
     }
 
-    public boolean isItemEntitiesMatchMode() {
-        return itemEntitiesMatchMode;
+    public boolean isItemWhiteMode() {
+        return itemWhiteMode;
     }
 
-    public void setItemEntitiesMatchMode(boolean itemEntitiesMatchMode) {
-        this.itemEntitiesMatchMode = itemEntitiesMatchMode;
+    public void setItemWhiteMode(boolean itemWhiteMode) {
+        this.itemWhiteMode = itemWhiteMode;
+    }
+
+    public boolean isItemBlackMode() {
+        return itemBlackMode;
+    }
+
+    public void setItemBlackMode(boolean itemBlackMode) {
+        this.itemBlackMode = itemBlackMode;
     }
 
     public List<String> getItemEntitiesWhitelist() {
