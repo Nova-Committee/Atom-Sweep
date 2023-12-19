@@ -3,6 +3,7 @@ package nova.committee.atom.sweep.common.cmd;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import lombok.val;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -61,8 +62,8 @@ public class SweepCommand {
     }
 
     private static int whiteAdd(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-        var player = context.getSource().getPlayerOrException();
-        var itemStack = player.getMainHandItem();
+        val player = context.getSource().getPlayerOrException();
+        val itemStack = player.getMainHandItem();
         if (ForgeRegistries.ITEMS.getKey(itemStack.getItem()) != null) {
             ModConfig.INSTANCE.getItem().addItemEntitiesWhitelist(ForgeRegistries.ITEMS.getKey(itemStack.getItem()).toString());
             ModConfig.INSTANCE.save();
@@ -74,8 +75,8 @@ public class SweepCommand {
     }
 
     private static int whiteDel(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-        var player = context.getSource().getPlayerOrException();
-        var itemStack = player.getMainHandItem();
+        val player = context.getSource().getPlayerOrException();
+        val itemStack = player.getMainHandItem();
         if (ForgeRegistries.ITEMS.getKey(itemStack.getItem()) != null) {
             ModConfig.INSTANCE.getItem().delItemEntitiesWhitelist(ForgeRegistries.ITEMS.getKey(itemStack.getItem()).toString());
             ModConfig.INSTANCE.save();
@@ -87,8 +88,8 @@ public class SweepCommand {
     }
 
     private static int itemsExe(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-        var world = context.getSource().getLevel();
-        var killItemCount = Sweeper.INSTANCE.cleanupItemEntity(world);
+        val world = context.getSource().getLevel();
+        val killItemCount = Sweeper.INSTANCE.cleanupItemEntity(world);
         Static.sendMessageToAllPlayers(world.getServer(), ModConfig.INSTANCE.getCommon().getSweepNoticeComplete(),
                 killItemCount, 0, 0, 0);
 
@@ -96,8 +97,8 @@ public class SweepCommand {
     }
 
     private static int monstersExe(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-        var world = context.getSource().getLevel();
-        var killLivingCount = Sweeper.INSTANCE.cleanupMonsterEntity(world);
+        val world = context.getSource().getLevel();
+        val killLivingCount = Sweeper.INSTANCE.cleanupMonsterEntity(world);
 
         Static.sendMessageToAllPlayers(world.getServer(), ModConfig.INSTANCE.getCommon().getSweepNoticeComplete(),
                 0, killLivingCount, 0, 0);
@@ -106,8 +107,8 @@ public class SweepCommand {
     }
 
     private static int animalsExe(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-        var world = context.getSource().getLevel();
-        var killLivingCount = Sweeper.INSTANCE.cleanupAnimalEntity(world);
+        val world = context.getSource().getLevel();
+        val killLivingCount = Sweeper.INSTANCE.cleanupAnimalEntity(world);
         Static.sendMessageToAllPlayers(world.getServer(), ModConfig.INSTANCE.getCommon().getSweepNoticeComplete(),
                 0, killLivingCount, 0, 0);
 
@@ -115,16 +116,16 @@ public class SweepCommand {
     }
 
     private static int xpsExe(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-        var world = context.getSource().getLevel();
-        var killXpCount = Sweeper.INSTANCE.cleanupXpEntity(world);
+        val world = context.getSource().getLevel();
+        val killXpCount = Sweeper.INSTANCE.cleanupXpEntity(world);
         Static.sendMessageToAllPlayers(world.getServer(), ModConfig.INSTANCE.getCommon().getSweepNoticeComplete(),
                 0, 0, killXpCount, 0);
         return 1;
     }
 
     private static int othersExe(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-        var world = context.getSource().getLevel();
-        var killOtherCount = Sweeper.INSTANCE.cleanOtherEntities(world);
+        val world = context.getSource().getLevel();
+        val killOtherCount = Sweeper.INSTANCE.cleanOtherEntities(world);
         Static.sendMessageToAllPlayers(world.getServer(), ModConfig.INSTANCE.getCommon().getSweepNoticeComplete(),
                 0, 0, 0, killOtherCount);
         return 1;

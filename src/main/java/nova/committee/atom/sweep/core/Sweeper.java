@@ -1,6 +1,7 @@
 package nova.committee.atom.sweep.core;
 
 
+import lombok.val;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
@@ -19,12 +20,9 @@ import nova.committee.atom.sweep.core.model.ASMob;
 import nova.committee.atom.sweep.init.config.ModConfig;
 import nova.committee.atom.sweep.init.handler.SweepHandler;
 
-import java.util.Objects;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
-import java.util.stream.StreamSupport;
 
 /**
  * Project: clean
@@ -137,23 +135,28 @@ public class Sweeper {
 
     private int cleanupEntity(ServerLevel world, Predicate<Entity> type, Predicate<Entity> additionalPredicate) {
         AtomicInteger amount = new AtomicInteger();
+        List<Entity> entities = Collections.synchronizedList(new ArrayList<>());//读多写少的线程安全
+        for (val e : world.getAllEntities()) {
+            entities.add(e);
+        }
         try {
-            StreamSupport.stream(world.getAllEntities().spliterator(), false)
-
-                    .filter(Objects::nonNull)
-                    .filter(entity -> entity.getCustomName() == null)
-                    .filter(type)
-                    .filter(additionalPredicate)
-                    .forEach(
-                            entity -> {
-                                entity.kill();
-                                if (entity instanceof ItemEntity) {
-                                    amount.getAndAdd(((ItemEntity) entity).getItem().getCount());
-                                } else {
-                                    amount.getAndIncrement();
+            synchronized (entities) {
+                entities.stream()
+                        .filter(Objects::nonNull)
+                        .filter(entity -> entity.getCustomName() == null)
+                        .filter(type)
+                        .filter(additionalPredicate)
+                        .forEach(
+                                entity -> {
+                                    entity.remove(Entity.RemovalReason.KILLED);
+                                    if (entity instanceof ItemEntity) {
+                                        amount.getAndAdd(((ItemEntity) entity).getItem().getCount());
+                                    } else {
+                                        amount.getAndIncrement();
+                                    }
                                 }
-                            }
-                    );
+                        );
+            }
         } catch (ArrayIndexOutOfBoundsException ignored) {
 
         }
