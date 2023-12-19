@@ -42,17 +42,17 @@ public class Sweeper {
     }
 
     public void startSweep() {
-        if (this.timer != null) {
-            this.stopSweep();
-        }
+        this.stopSweep();
 
         this.timer = new Timer();
         this.resetTimer();
     }
 
     public void stopSweep() {
-        this.timer.cancel();
-        this.timer = null;
+        if (this.timer != null) {
+            this.timer.cancel();
+            this.timer = null;
+        }
     }
 
     public void resetTimer() {
@@ -137,23 +137,26 @@ public class Sweeper {
 
     private int cleanupEntity(ServerLevel world, Predicate<Entity> type, Predicate<Entity> additionalPredicate) {
         AtomicInteger amount = new AtomicInteger();
-        StreamSupport.stream(world.getAllEntities().spliterator(), false)
+        try {
+            StreamSupport.stream(world.getAllEntities().spliterator(), false)
 
-                .filter(Objects::nonNull)
-                .filter(entity -> entity.getCustomName() == null)
-                .filter(type)
-                .filter(additionalPredicate)
-                .forEach(
-                        entity -> {
-                            entity.kill();
-                            if (entity instanceof ItemEntity) {
-                                amount.getAndAdd(((ItemEntity) entity).getItem().getCount());
-                            } else {
-                                amount.getAndIncrement();
+                    .filter(Objects::nonNull)
+                    .filter(entity -> entity.getCustomName() == null)
+                    .filter(type)
+                    .filter(additionalPredicate)
+                    .forEach(
+                            entity -> {
+                                entity.kill();
+                                if (entity instanceof ItemEntity) {
+                                    amount.getAndAdd(((ItemEntity) entity).getItem().getCount());
+                                } else {
+                                    amount.getAndIncrement();
+                                }
                             }
-                        }
-                )
-        ;
+                    );
+        } catch (ArrayIndexOutOfBoundsException ignored) {
+
+        }
 
         return amount.get();
     }

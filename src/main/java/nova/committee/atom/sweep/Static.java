@@ -36,7 +36,7 @@ public class Static {
         //#if MC >= 11900
         player.sendSystemMessage(Component.translatable(message));
         //#else
-        //$$ player.sendMessage(new TranslatableComponent("message"), Util.NIL_UUID);
+        //$$ player.sendMessage(new TranslatableComponent(message), Util.NIL_UUID);
         //#endif
     }
 

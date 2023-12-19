@@ -32,7 +32,7 @@ public class ISweep {
     }
 
     public void onServerStopped(MinecraftServer server) {
-        Sweeper.INSTANCE.stopSweep();
+
     }
 
     public void onServerTick(TickEvent.ServerTickEvent event) {
