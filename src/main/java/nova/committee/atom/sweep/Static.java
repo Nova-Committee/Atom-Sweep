@@ -38,7 +38,8 @@ public class Static {
     public static final String MOD_ID = "atomsweep";
     public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
     public static Path CONFIG_FILE;
-    public static Path CONFIG_FOLDER;
+    public static Path ATOM_FOLDER;
+    public static Path SWEEP_FOLDER;
     public static MinecraftServer SERVER = ServerLifecycleHooks.getCurrentServer();
     public static boolean isLuckPerms = false;
 

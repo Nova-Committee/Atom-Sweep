@@ -8,13 +8,16 @@ import nova.committee.atom.sweep.core.Sweeper;
 import nova.committee.atom.sweep.init.handler.SweepHandler;
 import nova.committee.atom.sweep.util.FileUtils;
 
-import static nova.committee.atom.sweep.Static.CONFIG_FOLDER;
+import static nova.committee.atom.sweep.Static.ATOM_FOLDER;
+import static nova.committee.atom.sweep.Static.SWEEP_FOLDER;
 
 public class ISweep {
     public ISweep() {
-        CONFIG_FOLDER = FMLPaths.GAMEDIR.get().resolve("atom");
-        FileUtils.checkFolder(CONFIG_FOLDER);
-        Static.CONFIG_FILE = CONFIG_FOLDER.resolve("config.toml");
+        ATOM_FOLDER = FMLPaths.GAMEDIR.get().resolve("atom");
+        FileUtils.checkFolder(ATOM_FOLDER);
+        SWEEP_FOLDER = ATOM_FOLDER.resolve("sweep");
+        FileUtils.checkFolder(SWEEP_FOLDER);
+        Static.CONFIG_FILE = SWEEP_FOLDER.resolve("config.toml");
         Static.isLuckPerms = ModList.get().isLoaded("luckperms");
     }
 
@@ -28,11 +31,11 @@ public class ISweep {
     }
 
     public void onServerStopping(MinecraftServer server) {
-        Sweeper.INSTANCE.stopSweep();
+
     }
 
     public void onServerStopped(MinecraftServer server) {
-
+        Sweeper.INSTANCE.stopSweep();
     }
 
     public void onServerTick(TickEvent.ServerTickEvent event) {
