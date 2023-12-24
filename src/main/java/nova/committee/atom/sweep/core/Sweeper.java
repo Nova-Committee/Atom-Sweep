@@ -2,6 +2,7 @@ package nova.committee.atom.sweep.core;
 
 
 import lombok.val;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
@@ -151,7 +152,16 @@ public class Sweeper {
                         .filter(additionalPredicate)
                         .forEach(
                                 entity -> {
-                                    entity.kill();
+                                    if (ModConfig.INSTANCE.getMob().isExpOn()) {
+                                        entity.kill();
+                                    } else {
+                                        //#if MC >= 11800
+                                        entity.discard();
+                                        //#else
+                                        //$$ entity.kill();
+                                        //#endif
+                                    }
+
                                     if (entity instanceof ItemEntity) {
                                         amount.getAndAdd(((ItemEntity) entity).getItem().getCount());
                                     } else {

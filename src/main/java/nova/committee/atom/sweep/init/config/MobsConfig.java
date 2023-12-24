@@ -17,6 +17,8 @@ import java.util.List;
 public class MobsConfig extends AutoLoadTomlConfig {
     @TableField(rightComment = "生物实体清理功能（最高优先级）")
     private boolean isMobEntityCleanupEnable = true;
+    @TableField(rightComment = "生物清理是否掉落经验")
+    private boolean isExpOn = false;
     @TableField(rightComment = "动物实体清理功能（次级）")
     private boolean isAnimalEntitiesCleanupEnable = true;
     @TableField(rightComment = "怪物实体清理功能（次级）")
@@ -54,6 +56,14 @@ public class MobsConfig extends AutoLoadTomlConfig {
 
     public void setMobEntityCleanupEnable(boolean mobEntityCleanupEnable) {
         isMobEntityCleanupEnable = mobEntityCleanupEnable;
+    }
+
+    public boolean isExpOn() {
+        return isExpOn;
+    }
+
+    public void setExpOn(boolean expOn) {
+        isExpOn = expOn;
     }
 
     public boolean isMobBlackMode() {
