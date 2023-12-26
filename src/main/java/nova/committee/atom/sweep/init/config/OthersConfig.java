@@ -2,7 +2,7 @@ package nova.committee.atom.sweep.init.config;
 
 import cn.evole.config.toml.AutoLoadTomlConfig;
 import cn.evole.config.toml.annotation.TableField;
-import cn.evole.libs.tomlj.TomlTable;
+import org.tomlj.TomlTable;
 
 /**
  * Name: atomsweep / OthersConfig

@@ -14,14 +14,16 @@ repositories {
     mavenCentral()
     maven { url 'https://maven.nova-committee.cn/releases' }
     maven { url 'https://maven.mohistmc.com/' }
-
+    mavenLocal()
 }
 
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings loom.officialMojangMappings()
     forge "net.minecraftforge:forge:${project.minecraft_version}-${project.forge_version}"
-    implementation forgeRuntimeLibrary(include("cn.evole.config:AtomConfig-Toml:${project.toml_version}"))
+    implementation forgeRuntimeLibrary(include("cn.evole.config:AtomConfig-Toml:${project.toml_version}")) {
+        transitive = false
+    }
 
     compileOnly "net.luckperms:api:${lickperms_version}"
     compileOnly "org.projectlombok:lombok:${lombok_version}"
@@ -39,8 +41,15 @@ remapJar {
 
 
 tasks.register('copyJars', Copy) {
-    from "$projectDir/build/libs"
+    delete fileTree("$rootDir/build/libs").matching {
+        include "**/*.jar"
+    }
+    delete fileTree("$projectDir/build/libs").matching {
+        include "**/*.jar"
+    }
     into "$rootDir/build/libs"
+    from("$projectDir/build/libs")
+    include { details -> details.file.name.contains("${mod_version}") }
 }
 
 buildNeeded.finalizedBy("copyJars")

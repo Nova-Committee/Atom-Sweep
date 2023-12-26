@@ -6,6 +6,9 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import lombok.val;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.ResourceLocationArgument;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
 import nova.committee.atom.sweep.Static;
 import nova.committee.atom.sweep.core.Sweeper;
@@ -51,42 +54,98 @@ public class SweepCommand {
                         .then(
                                    Commands.literal("white")
                                            .then(
-                                                   Commands.literal("add")
-                                                           .executes(SweepCommand::whiteAdd)
-                                                           .requires(context -> context.hasPermission(2))
+                                                   Commands.literal("item")
+                                                           .then(
+                                                                   Commands.literal("add")
+                                                                           .executes(SweepCommand::itemWhiteAdd)
+                                                                           .requires(context -> context.hasPermission(2))
 
+                                                           )
+                                                           .then(
+                                                                   Commands.literal("del")
+                                                                           .executes(SweepCommand::itemWhiteDel)
+                                                                           .requires(context -> context.hasPermission(2))
+                                                           )
                                            )
                                            .then(
-                                                   Commands.literal("del")
-                                                           .executes(SweepCommand::whiteDel)
-                                                           .requires(context -> context.hasPermission(2))
+                                                   Commands.literal("entity")
+                                                           .then(
+                                                                   Commands.literal("add")
+                                                                           .then(Commands.argument("entity_name", ResourceLocationArgument.id())
+                                                                                   .executes(SweepCommand::entityWhiteAdd)
+                                                                           )
+                                                                           .requires(context -> context.hasPermission(2))
+
+                                                           )
+                                                           .then(
+                                                                   Commands.literal("del")
+                                                                           .then(Commands.argument("entity_name", ResourceLocationArgument.id())
+                                                                                   .executes(SweepCommand::entityWhiteDel)
+                                                                           )
+                                                                           .requires(context -> context.hasPermission(2))
+                                                           )
                                            )
+
                         )
         );
     }
 
-    private static int whiteAdd(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+    private static int itemWhiteAdd(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         val player = context.getSource().getPlayerOrException();
         val itemStack = player.getMainHandItem();
         if (ForgeRegistries.ITEMS.getKey(itemStack.getItem()) != null) {
             ModConfig.INSTANCE.getItem().addItemEntitiesWhitelist(ForgeRegistries.ITEMS.getKey(itemStack.getItem()).toString());
             ModConfig.INSTANCE.save();
-            Static.sendMessage(player, "message.cmd.white.add.success");
+            Static.sendMessage(player, "message.cmd.item_white.add.success");
         } else {
-            Static.sendMessage(player, "message.cmd.white.add.fail");
+            Static.sendMessage(player, "message.cmd.item_white.add.fail");
         }
         return 1;
     }
 
-    private static int whiteDel(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+    private static int itemWhiteDel(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         val player = context.getSource().getPlayerOrException();
         val itemStack = player.getMainHandItem();
         if (ForgeRegistries.ITEMS.getKey(itemStack.getItem()) != null) {
             ModConfig.INSTANCE.getItem().delItemEntitiesWhitelist(ForgeRegistries.ITEMS.getKey(itemStack.getItem()).toString());
             ModConfig.INSTANCE.save();
-            Static.sendMessage(player, "message.cmd.white.del.success");
+            Static.sendMessage(player, "message.cmd.item_white.del.success");
         } else {
-            Static.sendMessage(player, "message.cmd.white.del.success");
+            Static.sendMessage(player, "message.cmd.item_white.del.success");
+        }
+        return 1;
+    }
+
+    private static int entityWhiteAdd(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        val player = context.getSource().getPlayerOrException();
+        val entityName = context.getArgument("entity_name", ResourceLocation.class);
+        //#if MC >= 11900
+        if (ForgeRegistries.ENTITY_TYPES.getValue(entityName) != null) {
+            //#else
+            //$$ if (ForgeRegistries.ENTITIES.getValue(entityName) != null) {
+            //#endif
+            ModConfig.INSTANCE.getMob().addMobEntitiesWhitelist(entityName.toString());
+            ModConfig.INSTANCE.save();
+            Static.sendMessage(player, "message.cmd.entity_white.add.success");
+        } else {
+            Static.sendMessage(player, "message.cmd.entity_white.add.fail");
+        }
+        return 1;
+    }
+
+    private static int entityWhiteDel(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        val player = context.getSource().getPlayerOrException();
+        val entityName = context.getArgument("entity_name", ResourceLocation.class);
+        //#if MC >= 11900
+        if (ForgeRegistries.ENTITY_TYPES.getValue(entityName) != null) {
+            //#else
+            //$$ if (ForgeRegistries.ENTITIES.getValue(entityName) != null) {
+            //#endif
+            ModConfig.INSTANCE.getItem().delItemEntitiesWhitelist(entityName.toString());
+            ModConfig.INSTANCE.save();
+            Static.sendMessage(player, "message.cmd.entity_white.del.success");
+        } else {
+            Static.sendMessage(player, "message.cmd.entity_white.del.success");
         }
         return 1;
     }

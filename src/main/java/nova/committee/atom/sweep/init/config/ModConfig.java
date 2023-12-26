@@ -4,7 +4,7 @@ import cn.evole.config.toml.AutoReloadToml;
 import cn.evole.config.toml.TomlUtil;
 import cn.evole.config.toml.annotation.Reload;
 import cn.evole.config.toml.annotation.TableField;
-import cn.evole.libs.tomlj.TomlTable;
+import org.tomlj.TomlTable;
 import lombok.Getter;
 import lombok.Setter;
 import nova.committee.atom.sweep.Static;

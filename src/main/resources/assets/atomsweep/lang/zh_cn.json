@@ -7,8 +7,12 @@
   "message.atomclean.mobCleanupComplete": "已清除 {0} 个生物实体。",
   "message.atomclean.monsterCleanupComplete": "已清除 {0} 个怪物实体。",
   "message.atomclean.animalCleanupComplete": "已清除 {0} 个动物实体。",
-  "message.cmd.white.add.success": "已经添加到白名单",
-  "message.cmd.white.add.fail": "添加到白名单失败",
-  "message.cmd.white.del.success": "已经从白名单移除",
-  "message.cmd.white.del.fail": "从白名单移除失败"
+  "message.cmd.item_white.add.success": "已经添加到白名单",
+  "message.cmd.item_white.add.fail": "添加到白名单失败",
+  "message.cmd.item_white.del.success": "已经从白名单移除",
+  "message.cmd.item_white.del.fail": "从白名单移除失败",
+  "message.cmd.entity_white.add.success": "已经添加到白名单",
+  "message.cmd.entity_white.add.fail": "添加到白名单失败",
+  "message.cmd.entity_white.del.success": "已经从白名单移除",
+  "message.cmd.entity_white.del.fail": "从白名单移除失败"
 }

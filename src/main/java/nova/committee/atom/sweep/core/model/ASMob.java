@@ -24,7 +24,6 @@ public class ASMob {
     }
 
     public boolean filtrate() {
-        int index;
         if (ModConfig.INSTANCE.getMob().isMobWhiteMode()) {
             // Whitelist
             for (String s : ModConfig.INSTANCE.getMob().getMobEntitiesWhitelist()) {

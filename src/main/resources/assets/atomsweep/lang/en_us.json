@@ -7,8 +7,12 @@
   "message.atomclean.mobCleanupComplete": "{0} mob entity(entities) removed",
   "message.atomclean.monsterCleanupComplete": "{0} monster entity(entities) removed",
   "message.atomclean.animalCleanupComplete": "{0} animal entity(entities) removed",
-  "message.cmd.white.add.success": "",
-  "message.cmd.white.add.fail": "",
-  "message.cmd.white.del.success": "",
-  "message.cmd.white.del.fail": ""
+  "message.cmd.item_white.add.success": "",
+  "message.cmd.item_white.add.fail": "",
+  "message.cmd.item_white.del.success": "",
+  "message.cmd.item_white.del.fail": "",
+  "message.cmd.entity_white.add.success": "",
+  "message.cmd.entity_white.add.fail": "",
+  "message.cmd.entity_white.del.success": "",
+  "message.cmd.entity_white.del.fail": ""
 }
