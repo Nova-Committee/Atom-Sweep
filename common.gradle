@@ -1,6 +1,7 @@
 apply(plugin: "dev.architectury.loom")
 apply(plugin: "maven-publish")
 apply(plugin: "com.replaymod.preprocess")
+apply(plugin: "com.matthewprenger.cursegradle")
 
 int mcVersion = 1
 
@@ -110,6 +111,27 @@ publishing {
                     password System.getenv('MAVEN_PASSWORD')
                 }
             }
+        }
+    }
+}
+
+if (System.getenv('CURSE_TOKEN')) {
+    curseforge {
+        apiKey = System.getenv('CURSE_TOKEN')
+        project {
+            id = '951980'
+            changelogType = 'markdown'
+            changelog = rootProject.file('changelogs.md')
+            releaseType = "release"
+            mainArtifact(remapJar) {
+                displayName = "${mod_name}-${minecraft_dependency}"
+            }
+            addGameVersion "${minecraft_version}"
+        }
+        options {
+            debug = true
+            detectNewerJava = true
+            forgeGradleIntegration = false
         }
     }
 }

@@ -2,6 +2,7 @@ plugins {
     id "com.replaymod.preprocess" version "SNAPSHOT"
     id 'dev.architectury.loom' version '1.4-SNAPSHOT' apply false
     id 'maven-publish'
+    id 'com.matthewprenger.cursegradle' version '1.4.0'
 }
 
 preprocess {
