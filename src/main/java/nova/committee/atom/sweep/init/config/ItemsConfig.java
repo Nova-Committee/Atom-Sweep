@@ -5,6 +5,7 @@ import cn.evole.config.toml.annotation.TableField;
 import org.tomlj.TomlTable;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -21,10 +22,10 @@ public class ItemsConfig extends AutoLoadTomlConfig {
     private boolean itemWhiteMode = true;
     @TableField(rightComment = "黑名单模式")
     private boolean itemBlackMode = true;
-    @TableField(rightComment = "白名单")
+    @TableField(rightComment = "白名单(优先级高于黑名单)")
     private List<String> itemEntitiesWhitelist = Arrays.asList("minecraft:diamond", "minecraft:emerald");
     @TableField(rightComment = "黑名单")
-    private List<String> itemEntitiesBlacklist = List.of();
+    private List<String> itemEntitiesBlacklist = Collections.emptyList();
 
     public ItemsConfig() {
         super(null);

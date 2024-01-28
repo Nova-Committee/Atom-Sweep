@@ -5,6 +5,7 @@ import cn.evole.config.toml.annotation.TableField;
 import org.tomlj.TomlTable;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -28,11 +29,12 @@ public class MobsConfig extends AutoLoadTomlConfig {
     @TableField(rightComment = "黑名单模式")
     private boolean mobBlackMode = true;
     @TableField(rightComment = "生物白名单")
-    private List<String> mobEntitiesWhitelist = Arrays.asList("minecraft:cat", "minecraft:mule", "minecraft:wolf", "minecraft:horse",
-            "minecraft:donkey", "minecraft:wither", "minecraft:guardian", "minecraft:villager", "minecraft:iron_golem", "minecraft:snow_golem",
+    private List<String> mobEntitiesWhitelist = Arrays.asList(
+            "minecraft:chicken", "minecraft:cat", "minecraft:mule", "minecraft:wolf", "minecraft:horse", "minecraft:donkey",
+            "minecraft:wither", "minecraft:guardian", "minecraft:villager", "minecraft:iron_golem", "minecraft:snow_golem",
             "minecraft:vindicator", "minecraft:ender_dragon", "minecraft:elder_guardian");
     @TableField(rightComment = "生物黑名单")
-    private List<String> mobEntitiesBlacklist = List.of();
+    private List<String> mobEntitiesBlacklist = Collections.emptyList();
 
     public boolean isAnimalEntitiesCleanupEnable() {
         return isAnimalEntitiesCleanupEnable;

@@ -113,11 +113,13 @@ public class Static {
                 return source.hasPermission(2);
             else
                 return true;
+        else if (!source.isPlayer())
+            return source.hasPermission(2);
         else
             try {
                 return Static.hasPermission(source.getPlayerOrException(), permission);
             } catch (CommandSyntaxException e) {
-                throw new RuntimeException(e);
+                return false;
             }
     }
 

@@ -80,6 +80,9 @@ processResources {
 
 tasks.withType(JavaCompile).configureEach {
     options.setEncoding("UTF-8")
+    javaCompiler = javaToolchains.compilerFor {
+        languageVersion = JavaLanguageVersion.of("${jdk_version}")
+    }
 }
 
 jar {
