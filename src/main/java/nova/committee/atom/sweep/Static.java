@@ -113,7 +113,7 @@ public class Static {
                 return source.hasPermission(2);
             else
                 return true;
-        else if (!source.isPlayer())
+        else if (!(source.getEntity() instanceof ServerPlayer))
             return source.hasPermission(2);
         else
             try {

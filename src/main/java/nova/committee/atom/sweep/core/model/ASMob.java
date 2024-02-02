@@ -49,9 +49,7 @@ public class ASMob {
             return true;
         } else if ((index = s.indexOf('*')) != -1) {
             s = s.substring(0, index - 1);
-            if (registryName.getNamespace().equals(s)) {
-                return false;
-            }
+            return registryName.getNamespace().equals(s);
         }
         return false;
     }
