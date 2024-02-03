@@ -55,6 +55,9 @@ tasks.register('copyJars', Copy) {
 
 buildNeeded.finalizedBy("copyJars")
 
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
 version = mod_version
 group = mod_group_id
 archivesBaseName = mod_name + "-" + minecraft_dependency
@@ -80,9 +83,6 @@ processResources {
 
 tasks.withType(JavaCompile).configureEach {
     options.setEncoding("UTF-8")
-    javaCompiler = javaToolchains.compilerFor {
-        languageVersion = JavaLanguageVersion.of("${jdk_version}")
-    }
 }
 
 jar {
