@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "atomsweep",
+  "version": "${version}",
+  "name": "AtomSweep-fabric",
+  "description": "Clean up Entities.",
+  "authors": [
+    "cnlimiter"
+  ],
+  "contact": {
+    "issues": "https://github.com/Nova-Committee/Atom-Sweep/issues",
+    "sources": "https://github.com/Nova-Committee/Atom-Sweep"
+  },
+  "license": "AGPL-3.0",
+  "icon": "assets/atomsweep/icon.png",
+  "environment": "server",
+  "jars": [
+    {
+      "file": "META-INF/jars/AtomSweep-fabric-1.16.x-${version}.jar"
+    },
+    {
+      "file": "META-INF/jars/AtomSweep-fabric-1.18.x-${version}.jar"
+    },
+    {
+      "file": "META-INF/jars/AtomSweep-fabric-1.19.x-${version}.jar"
+    },
+    {
+      "file": "META-INF/jars/AtomSweep-fabric-1.20.x-${version}.jar"
+    }
+  ]
+}
