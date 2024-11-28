@@ -1,6 +1,5 @@
 package committee.nova.mods.atom.sweep.common;
 
-import committee.nova.mods.atom.sweep.common.config.ModConfig;
 import committee.nova.mods.atom.sweep.common.config.Config;
 import committee.nova.mods.atom.sweep.common.core.Sweeper;
 import net.minecraft.server.MinecraftServer;
@@ -32,7 +31,7 @@ public class SweepCommon {
                 counter = -1;
             } else {
                 if (counter % 20 == 0) {
-                    Constants.sendMessageToAllPlayers(ModConfig.sweepNotice.get(), counter / 20);
+                    Constants.sendMessageToAllPlayers(Config.COMMON.sweepNotice.get(), counter / 20);
                 }
 
                 --counter;

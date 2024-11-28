@@ -1,7 +1,7 @@
 package committee.nova.mods.atom.sweep.common.core.model;
 
 
-import committee.nova.mods.atom.sweep.common.config.ModConfig;
+import committee.nova.mods.atom.sweep.common.config.Config;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
@@ -23,16 +23,16 @@ public class ASMob {
     }
 
     public boolean filtrate() {
-        if (ModConfig.mobWhiteMode.get()) {
+        if (Config.COMMON.mobWhiteMode.get()) {
             // Whitelist
-            for (String s : ModConfig.mobEntitiesWhitelist.get()) {
+            for (String s : Config.COMMON.mobEntitiesWhitelist.get()) {
                 if (mobMatch(s, this.registryName)) return false;
             }
             return true;
         }
-        if (ModConfig.mobBlackMode.get()) {
+        if (Config.COMMON.mobBlackMode.get()) {
             // Blacklist
-            for (String s : ModConfig.mobEntitiesBlacklist.get()) {
+            for (String s : Config.COMMON.mobEntitiesBlacklist.get()) {
                 if (ASItem.itemMatch(s, this.registryName)) return true;
             }
             return false;

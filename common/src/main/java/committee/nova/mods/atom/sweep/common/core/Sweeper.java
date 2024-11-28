@@ -3,7 +3,7 @@ package committee.nova.mods.atom.sweep.common.core;
 
 import committee.nova.mods.atom.sweep.common.Constants;
 import committee.nova.mods.atom.sweep.common.SweepCommon;
-import committee.nova.mods.atom.sweep.common.config.ModConfig;
+import committee.nova.mods.atom.sweep.common.config.Config;
 import committee.nova.mods.atom.sweep.common.core.model.ASItem;
 import committee.nova.mods.atom.sweep.common.core.model.ASMob;
 import net.minecraft.server.MinecraftServer;
@@ -73,18 +73,18 @@ public class Sweeper {
                         }
 
                     }
-                }, (long) (ModConfig.sweepNotify.get() - ModConfig.sweepDiscount.get()) * 1000L);
+                }, (long) (Config.COMMON.sweepNotify.get() - Config.COMMON.sweepDiscount.get()) * 1000L);
             }
         };
-        this.timer.schedule(this.currentTask, 0L, (long) ModConfig.sweepPeriod.get() * 60L * 1000L);
+        this.timer.schedule(this.currentTask, 0L, (long) Config.COMMON.sweepPeriod.get() * 60L * 1000L);
     }
 
     public void startSweepTick() {
-        SweepCommon.counter = ModConfig.sweepDiscount.get() * 20;
+        SweepCommon.counter = Config.COMMON.sweepDiscount.get() * 20;
     }
 
     public void noticeSweep() {
-        Constants.sendMessageToAllPlayers(ModConfig.sweepNotice.get(), ModConfig.sweepNotify.get());
+        Constants.sendMessageToAllPlayers(Config.COMMON.sweepNotice.get(), Config.COMMON.sweepNotify.get());
     }
 
 
@@ -96,22 +96,22 @@ public class Sweeper {
         Iterable<ServerLevel> worlds = server.getAllLevels();
 
         for (ServerLevel world : worlds) {
-            if (ModConfig.isItemEntityCleanupEnable.get()) {
+            if (Config.COMMON.isItemEntityCleanupEnable.get()) {
                     killItemCount += cleanupItemEntity(world);
                 }
-            if (ModConfig.isMobEntityCleanupEnable.get()) {
-                if (ModConfig.isAnimalEntitiesCleanupEnable.get())
+            if (Config.COMMON.isMobEntityCleanupEnable.get()) {
+                if (Config.COMMON.isAnimalEntitiesCleanupEnable.get())
                         killLivingCount += cleanupAnimalEntity(world);
-                if (ModConfig.isMonsterEntitiesCleanupEnable.get())
+                if (Config.COMMON.isMonsterEntitiesCleanupEnable.get())
                         killLivingCount += cleanupMonsterEntity(world);
                 }
-            if (ModConfig.isExperienceOrbEntityCleanupEnable.get())
+            if (Config.COMMON.isExperienceOrbEntityCleanupEnable.get())
                     killXpCount += cleanupXpEntity(world);
 
                 killOtherCount += cleanOtherEntities(world);
         }
 
-        Constants.sendMessageToAllPlayers(server, ModConfig.sweepNoticeComplete.get(), killItemCount, killLivingCount, killXpCount, killOtherCount);
+        Constants.sendMessageToAllPlayers(server, Config.COMMON.sweepNoticeComplete.get(), killItemCount, killLivingCount, killXpCount, killOtherCount);
     }
 
     public int cleanupItemEntity(ServerLevel world) {
@@ -148,7 +148,7 @@ public class Sweeper {
                         .filter(additionalPredicate)
                         .forEach(
                                 entity -> {
-                                    if (ModConfig.isExpOn.get()) {
+                                    if (Config.COMMON.isExpOn.get()) {
                                         entity.kill();
                                     } else {
                                         entity.discard();
@@ -172,25 +172,25 @@ public class Sweeper {
     public int cleanOtherEntities(ServerLevel world) {
         int amount = 0;
 
-        if (ModConfig.isFallingBlocksEntityCleanupEnable.get())
+        if (Config.COMMON.isFallingBlocksEntityCleanupEnable.get())
             amount += cleanupEntity(world, entity -> entity instanceof FallingBlockEntity, entity -> true);
-        if (ModConfig.isArrowEntityCleanupEnable.get())
+        if (Config.COMMON.isArrowEntityCleanupEnable.get())
             amount += cleanupEntity(world, entity -> entity instanceof AbstractArrow, entity -> !(entity instanceof ThrownTrident));
-        if (ModConfig.isTridentEntityCleanupEnable.get())
+        if (Config.COMMON.isTridentEntityCleanupEnable.get())
             amount += cleanupEntity(world, entity -> entity instanceof ThrownTrident, entity -> true);
-        if (ModConfig.isDamagingProjectileEntityCleanupEnable.get())
+        if (Config.COMMON.isDamagingProjectileEntityCleanupEnable.get())
             amount += cleanupEntity(world, entity -> entity instanceof AbstractHurtingProjectile, entity -> true);
-        if (ModConfig.isShulkerBulletEntityCleanupEnable.get())
+        if (Config.COMMON.isShulkerBulletEntityCleanupEnable.get())
             amount += cleanupEntity(world, entity -> entity instanceof ShulkerBullet, entity -> true);
-        if (ModConfig.isFireworkRocketEntityCleanupEnable.get())
+        if (Config.COMMON.isFireworkRocketEntityCleanupEnable.get())
             amount += cleanupEntity(world, entity -> entity instanceof FireworkRocketEntity, entity -> true);
-        if (ModConfig.isItemFrameEntityCleanupEnable.get())
+        if (Config.COMMON.isItemFrameEntityCleanupEnable.get())
             amount += cleanupEntity(world, entity -> entity instanceof ItemFrame, entity -> true);
-        if (ModConfig.isPaintingEntityCleanupEnable.get())
+        if (Config.COMMON.isPaintingEntityCleanupEnable.get())
             amount += cleanupEntity(world, entity -> entity instanceof Painting, entity -> true);
-        if (ModConfig.isBoatEntityCleanupEnable.get())
+        if (Config.COMMON.isBoatEntityCleanupEnable.get())
             amount += cleanupEntity(world, entity -> entity instanceof Boat, entity -> true);
-        if (ModConfig.isTNTEntityCleanupEnable.get())
+        if (Config.COMMON.isTNTEntityCleanupEnable.get())
             amount += cleanupEntity(world, entity -> entity instanceof PrimedTnt, entity -> true);
         return amount;
     }

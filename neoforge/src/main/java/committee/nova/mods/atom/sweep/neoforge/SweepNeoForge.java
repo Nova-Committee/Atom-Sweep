@@ -16,7 +16,7 @@ import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
-import static committee.nova.mods.atom.sweep.common.config.ModConfig.COMMON;
+import committee.nova.mods.atom.sweep.common.config.Config;
 
 @Mod(Constants.MOD_ID)
 @EventBusSubscriber
@@ -24,7 +24,9 @@ public class SweepNeoForge {
 
     public SweepNeoForge(IEventBus eventBus) {
         SweepCommon.init();
-        ForgeConfigRegistry.INSTANCE.register(Constants.MOD_ID, ModConfig.Type.COMMON, COMMON);
+        Config.initCommonConfig(spec->{
+            ForgeConfigRegistry.INSTANCE.register(Constants.MOD_ID, ModConfig.Type.COMMON, spec);
+        });
     }
 
     @SubscribeEvent

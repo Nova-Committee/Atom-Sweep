@@ -1,7 +1,7 @@
 package committee.nova.mods.atom.sweep.common.core.model;
 
 
-import committee.nova.mods.atom.sweep.common.config.ModConfig;
+import committee.nova.mods.atom.sweep.common.config.Config;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -26,16 +26,16 @@ public class ASItem {
      * @return 白名单或者黑名单
      */
     public boolean filtrate() {
-        if (ModConfig.itemWhiteMode.get()) {
+        if (Config.COMMON.itemWhiteMode.get()) {
             // Whitelist
-            for (String s : ModConfig.itemEntitiesWhitelist.get()) {
+            for (String s : Config.COMMON.itemEntitiesWhitelist.get()) {
                 if (itemMatch(s, this.registryName)) return false;
             }
             return true;
         }
-        if (ModConfig.itemBlackMode.get()) {
+        if (Config.COMMON.itemBlackMode.get()) {
             // Blacklist
-            for (String s : ModConfig.itemEntitiesBlacklist.get()) {
+            for (String s : Config.COMMON.itemEntitiesBlacklist.get()) {
                 if (itemMatch(s, this.registryName)) return true;
             }
             return false;
